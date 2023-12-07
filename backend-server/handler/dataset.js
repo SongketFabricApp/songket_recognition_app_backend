@@ -68,7 +68,6 @@ const makeDataset = async (request, h) => {
             const db = firebase_admin.firestore();
             const outputDb = db.collection("dataset");
             await outputDb.doc(fabricId).set({
-                fabricid: fabricId,
                 fabricname: fabricname,
                 region: region,
                 pattern: pattern,
