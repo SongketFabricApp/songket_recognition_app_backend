@@ -81,7 +81,6 @@ const makeUsers = async (request, h) => {
             const db = firebase_admin.firestore();
             const outputDb = db.collection("users");
             await outputDb.doc(userId).set({
-                user_id: userId,
                 username: username,
                 email: email,
                 phone: phone,
@@ -144,7 +143,6 @@ const editUsers = async (request, h) => {
                 email: email,
                 phone: phone,
                 password: password,
-                img_profile: user_url
             });
 
             const response = h.response({
