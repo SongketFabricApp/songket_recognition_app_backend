@@ -14,7 +14,7 @@ const makeDataset = async (request, h) => {
     if (key === api_key) {
         // Try (jika request payload valid)
         try {
-            const { fabricname, region, pattern, description, img_url } =
+            const { idfabric, fabricname, region, pattern, description, img_url } =
                 request.payload;
 
             const fabricId = "fabric" + Date.now().toString();
@@ -67,7 +67,8 @@ const makeDataset = async (request, h) => {
 
             const db = firebase_admin.firestore();
             const outputDb = db.collection("dataset");
-            await outputDb.doc(fabricname).set({
+            await outputDb.doc(fabricId).set({
+                fabricid: fabricId,
                 fabricname: fabricname,
                 region: region,
                 pattern: pattern,
@@ -142,7 +143,7 @@ const getDataset = async (request, h) => {
 
         const db = firebase_admin.firestore();
         const responseData = (
-            await db.collection("fabric").doc(id).get()
+            await db.collection("dataset").doc(id).get()
         ).data();
 
         const response = h.response(responseData);
@@ -158,8 +159,6 @@ const getDataset = async (request, h) => {
         return response;
     }
 };
-
-
 
 // dataset - Edit Data Dataset Tertentu
 const editDataset = async (request, h) => {
@@ -255,5 +254,32 @@ const editDataset = async (request, h) => {
     }
 };
 
+// dataset - Hapus Data Dataset Tertentu
+const deleteDataset = async (request, h) => {
+    // Mengambil Kunci API dari Request Header
+    const key = request.headers["x-api-key"];
+    // Jika Kunci API Benar
+    if (key === api_key) {
+        const { id } = request.params;
 
-module.exports = { getAllDataset, getDataset, makeDataset, editDataset, };
+        const db = firebase_admin.firestore();
+        const outputDb = db.collection("dataset");
+        await outputDb.doc(id).delete();
+
+        const response = h.response({
+            status: "success",
+        });
+        response.code(200);
+        return response;
+    }
+    // Jika Kunci API Salah
+    else {
+        const response = h.response({
+            status: "unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
+};
+
+module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset };

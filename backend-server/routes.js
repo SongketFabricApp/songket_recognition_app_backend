@@ -4,12 +4,14 @@ const {
     getUsers,
     makeUsers,
     editUsers,
+    deleteUsers,
 } = require("./handler/users");
 const {
     makeDataset,
     editDataset,
     getDataset,
     getAllDataset,
+    deleteDataset,
 } = require("./handler/dataset")
 
 
@@ -39,6 +41,14 @@ const routes = [
         handler: editUsers,
     },
 
+    // users - Hapus Data Users Tertentu
+    {
+        method: "DELETE",
+        path: "/users/{id}",
+        handler: deleteUsers,
+    },
+
+    
 
     // dataset - Ambil Seluruh Data Dataset
     {
@@ -46,7 +56,7 @@ const routes = [
         path: '/dataset',
         handler: getAllDataset,
     },
-    // laundry - Ambil Data Dataset Tertentu
+    // dataset - Ambil Data Dataset Tertentu
     {
         method: "GET",
         path: "/dataset/{id}",
@@ -78,6 +88,14 @@ const routes = [
             },
         },
     },
+
+    // transaksi - Hapus Data Transaksi Tertentu
+    {
+        method: "DELETE",
+        path: "/dataset/{id}",
+        handler: deleteDataset,
+    },
+
 ];
 
 // Export Routes

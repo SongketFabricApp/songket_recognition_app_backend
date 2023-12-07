@@ -77,9 +77,11 @@ const makeUsers = async (request, h) => {
             const { username, email, phone, password } =
                 request.payload;
 
+            const userId = "u" + Date.now().toString();
             const db = firebase_admin.firestore();
             const outputDb = db.collection("users");
-            await outputDb.doc(username).set({
+            await outputDb.doc(userId).set({
+                user_id: userId,
                 username: username,
                 email: email,
                 phone: phone,
@@ -96,11 +98,20 @@ const makeUsers = async (request, h) => {
             response.code(200);
             return response;
         } catch (error) {
-            // Catch (jika request payload tidak valid)
+            // Catch (jika request payload tidak valid atau error saat membuat user)
+            console.error("Error creating user:", error);
             const response = h.response({
                 status: "bad request",
             });
-            response.code(400);
+
+            // Check if the error is due to an existing email
+            if (error.code === "auth/email-already-exists") {
+                response.message = "Email address is already in use";
+                response.code(400); // Bad Request
+            } else {
+                response.code(500); // Internal Server Error
+            }
+
             return response;
         }
     }
@@ -169,18 +180,6 @@ const deleteUsers = async (request, h) => {
         const { id } = request.params;
 
         const db = firebase_admin.firestore();
-
-        const oldfilename = (await db.collection("users").doc(id).get())
-            .data()
-            .users_picture.split("/")
-            .pop();
-
-        const storage = new Storage({
-            keyFilename: path.join(__dirname, "../private/songketa.json"),
-        });
-
-        await storage.bucket(bucketName).file(`users/${oldfilename}`).delete();
-
         const outputDb = db.collection("users");
         await outputDb.doc(id).delete();
 
