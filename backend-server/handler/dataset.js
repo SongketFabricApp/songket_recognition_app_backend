@@ -14,7 +14,7 @@ const makeDataset = async (request, h) => {
     if (key === api_key) {
         // Try (jika request payload valid)
         try {
-            const { idfabric, fabricname, region, pattern, description, img_url } =
+            const {fabricname, origin, pattern, description, img_url } =
                 request.payload;
 
             const fabricId = "fabric" + Date.now().toString();
@@ -67,14 +67,17 @@ const makeDataset = async (request, h) => {
 
             const db = firebase_admin.firestore();
             const outputDb = db.collection("dataset");
-            await outputDb.doc(fabricId).set({
+            const newDocumentRef = outputDb.doc();
+            const documentId = newDocumentRef.id;
+            await newDocumentRef.set({
+                idfabric: documentId,
                 fabricname: fabricname,
-                region: region,
+                origin: origin,
                 pattern: pattern,
                 description: description,
                 img_url: url,
             });
-
+            
             const response = h.response({
                 status: "success",
             });
@@ -112,8 +115,7 @@ const getAllDataset = async (request, h) => {
         const snapshot = await outputDb.get();
 
         snapshot.forEach((doc) => {
-            const dataObject = {};
-            dataObject[doc.id] = doc.data();
+            const dataObject = doc.data();
             responseData["dataset"].push(dataObject);
         });
 
@@ -168,7 +170,7 @@ const editDataset = async (request, h) => {
         // Try (jika request payload valid)
         const { id } = request.params;
         try {
-            const { fabricname, region, pattern, description, img_url } =
+            const { idfabric, fabricname, origin, pattern, description, img_url } =
                 request.payload;
 
                 const fabricId = "fabric" + Date.now().toString();
@@ -221,9 +223,12 @@ const editDataset = async (request, h) => {
 
             const db = firebase_admin.firestore();
             const outputDb = db.collection("dataset");
-            await outputDb.doc(id).set({
+            const newDocumentRef = outputDb.doc();
+            const documentId = newDocumentRef.id;
+            await newDocumentRef.set({
+                idfabric: documentId,
                 fabricname: fabricname,
-                region: region,
+                origin: origin,
                 pattern: pattern,
                 description: description,
                 img_url: url,
