@@ -6,7 +6,7 @@ const path = require("path");
 const api_key = require("../private/key.json").api_key;
 const bucketName = require("../private/key.json").storage_bucket;
 
-// dataset - Buat Data Dataset Baru
+// POST - Buat Data Dataset Baru
 const makeDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -102,7 +102,7 @@ const makeDataset = async (request, h) => {
     }
 };
 
-// dataset - Ambil Seluruh Dataset
+//GET - Ambil Seluruh Dataset
 const getAllDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -133,7 +133,7 @@ const getAllDataset = async (request, h) => {
     }
 };
 
-// dataset - Ambil Data Dataset Tertentu
+//GET - Ambil Data Dataset Tertentu
 const getDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -161,7 +161,7 @@ const getDataset = async (request, h) => {
     }
 };
 
-// dataset - Edit Data Dataset Tertentu
+//PUT - Edit Data Dataset Tertentu
 const editDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -258,7 +258,7 @@ const editDataset = async (request, h) => {
     }
 };
 
-// dataset - Hapus Data Dataset Tertentu
+//DELETE - Hapus Data Dataset Tertentu
 const deleteDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];

@@ -6,7 +6,7 @@ const path = require("path");
 const api_key = require("../private/key.json").api_key;
 const bucketName = require("../private/key.json").storage_bucket;
 
-// users - Ambil Seluruh Data Users
+//GET - Ambil Seluruh Data User
 const getAllUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -37,7 +37,7 @@ const getAllUsers = async (request, h) => {
     }
 };
 
-// users - Ambil Data Users Tertentu
+//GET - Ambil Data User Tertentu
 const getUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -65,9 +65,7 @@ const getUsers = async (request, h) => {
     }
 };
 
-
-
-// users - Hapus Data Users Tertentu
+//DELETE - Hapus Data User Tertentu
 const deleteUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];

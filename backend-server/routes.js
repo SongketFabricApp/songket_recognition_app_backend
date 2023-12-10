@@ -1,22 +1,8 @@
 // Import dari Handler
-const {
-    getUsers,
-    getAllUsers,
-    deleteUsers,
-} = require("./handler/users")
-const {
-    makeUsers,
-} = require("./handler/register")
-const {
-    loginUsers,
-} = require("./handler/login")
-const {
-    makeDataset,
-    editDataset,
-    getDataset,
-    getAllDataset,
-    deleteDataset,
-} = require("./handler/dataset")
+const { getUsers, getAllUsers, deleteUsers } = require("./handler/users")
+const { makeUsers } = require("./handler/register")
+const { loginUsers } = require("./handler/login")
+const { makeDataset, editDataset, getDataset, getAllDataset, deleteDataset } = require("./handler/dataset")
 
 
 const routes = [
