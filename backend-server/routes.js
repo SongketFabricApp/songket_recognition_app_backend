@@ -1,10 +1,15 @@
 // Import dari Handler
 const {
-    getAllUsers,
     getUsers,
-    makeUsers,
+    getAllUsers,
     deleteUsers,
-} = require("./handler/users");
+} = require("./handler/users")
+const {
+    makeUsers,
+} = require("./handler/register")
+const {
+    loginUsers,
+} = require("./handler/login")
 const {
     makeDataset,
     editDataset,
@@ -30,8 +35,15 @@ const routes = [
     // users - Buat Data Users Baru
     {
         method: "POST",
-        path: "/users",
+        path: "/register",
         handler: makeUsers,
+    },
+
+    // users - Buat Data Users Baru
+    {
+        method: "POST",
+        path: "/login",
+        handler: loginUsers,
     },
 
     // users - Hapus Data Users Tertentu
