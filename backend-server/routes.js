@@ -3,7 +3,6 @@ const {
     getAllUsers,
     getUsers,
     makeUsers,
-    editUsers,
     deleteUsers,
 } = require("./handler/users");
 const {
@@ -33,12 +32,6 @@ const routes = [
         method: "POST",
         path: "/users",
         handler: makeUsers,
-    },
-    // users - Edit Data Users Tertentu
-    {
-        method: "PUT",
-        path: "/users/{id}",
-        handler: editUsers,
     },
 
     // users - Hapus Data Users Tertentu

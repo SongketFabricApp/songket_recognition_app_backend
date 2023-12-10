@@ -19,8 +19,7 @@ const getAllUsers = async (request, h) => {
         const snapshot = await outputDb.get();
 
         snapshot.forEach((doc) => {
-            const dataObject = {};
-            dataObject[doc.id] = doc.data();
+            const dataObject = doc.data();
             responseData["users"].push(dataObject);
         });
 
@@ -74,25 +73,31 @@ const makeUsers = async (request, h) => {
     if (key === api_key) {
         // Try (jika request payload valid)
         try {
-            const { username, email, phone, password } =
+            const { username, email, phone, password,} =
                 request.payload;
 
-            const userId = "u" + Date.now().toString();
             const db = firebase_admin.firestore();
             const outputDb = db.collection("users");
-            await outputDb.doc(userId).set({
-                username: username,
-                email: email,
-                phone: phone,
-                password: password,
-            });
+            const newDocumentRef = outputDb.doc();
+            const documentId = newDocumentRef.id;
 
             const userRecord = await firebase_admin.auth().createUser({
                 email: email,
                 password: password,
             });
+            const uid = userRecord.uid;
+
+            await newDocumentRef.set({
+                user_id: documentId,
+                username: username,
+                email: email,
+                phone: phone,
+                password: password,
+                firebase_uid: uid,
+            });
+
             const response = h.response({
-                status: "success",
+                status: "success", 
             });
             response.code(200);
             return response;
@@ -124,51 +129,6 @@ const makeUsers = async (request, h) => {
     }
 };
 
-// users - Edit Data Users Tertentu
-const editUsers = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        // Try (jika request payload valid)
-        const { id } = request.params;
-        try {
-            const { username, email, phone, password, } =
-                request.payload;
-
-            const db = firebase_admin.firestore();
-            const outputDb = db.collection("users");
-            await outputDb.doc(id).set({
-                username: username,
-                email: email,
-                phone: phone,
-                password: password,
-            });
-
-            const response = h.response({
-                status: "success",
-            });
-            response.code(200);
-            return response;
-        } catch (error) {
-            // Catch (jika request payload tidak valid)
-            const response = h.response({
-                status: "bad request",
-            });
-            response.code(400);
-            return response;
-        }
-    }
-    // Jika Kunci API Salah
-    else {
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
-};
-
 // users - Hapus Data Users Tertentu
 const deleteUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
@@ -177,16 +137,42 @@ const deleteUsers = async (request, h) => {
     if (key === api_key) {
         const { id } = request.params;
 
+        try {
         const db = firebase_admin.firestore();
         const outputDb = db.collection("users");
+
+        const documentId = await outputDb.doc(id).get();
+
+        // Check if the user exists
+            if (!documentId.exists) {
+                const response = h.response({
+                    status: "not found",
+                    message: "User not found",
+                });
+                response.code(404); // Not Found
+                return response;
+            }
+        
         await outputDb.doc(id).delete();
+
+        const firebaseUid = documentId.data().firebase_uid;
+        await firebase_admin.auth().deleteUser(firebaseUid);
 
         const response = h.response({
             status: "success",
         });
         response.code(200);
         return response;
+    } catch (error) {
+        console.error("Error deleting user:", error);
+
+        const response = h.response({
+            status: "bad request",
+        });
+        response.code(500); // Internal Server Error
+        return response;
     }
+}
     // Jika Kunci API Salah
     else {
         const response = h.response({
@@ -197,4 +183,4 @@ const deleteUsers = async (request, h) => {
     }
 };
 
-module.exports = { getAllUsers, getUsers, makeUsers, editUsers, deleteUsers};
+module.exports = { getAllUsers, getUsers, makeUsers, deleteUsers};
