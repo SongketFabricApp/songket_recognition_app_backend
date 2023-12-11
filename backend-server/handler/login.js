@@ -1,29 +1,56 @@
 // Dependencies
 const firebase_admin = require("firebase-admin");
-const { Storage } = require("@google-cloud/storage");
-const fs = require("fs");
-const path = require("path");
 const api_key = require("../private/key.json").api_key;
-const bucketName = require("../private/key.json").storage_bucket;
+const bcrypt = require('bcrypt');
 
-//POST - Login User
+// POST - Login User
 const loginUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
     // Jika Kunci API Benar
     if (key === api_key) {
+        // Try (jika request payload valid)
         try {
-            const { idToken } = request.payload;
+            const { email, password } = request.payload;
 
-            // Verify the ID token to authenticate the user
-            const decodedToken = await firebase_admin.auth().verifyIdToken(idToken);
-            const uid = decodedToken.uid;
+            // Get user data from Firestore based on email
+            const userQuery = await firebase_admin.firestore().collection("users")
+                .where("email", "==", email)
+                .get();
 
-            // You can perform additional logic here if needed
+            if (userQuery.empty) {
+                // User not found
+                const response = h.response({
+                    status: "not found",
+                });
+                response.code(404);
+                return response;
+            }
+
+            const userData = userQuery.docs[0].data();
+            
+            // Compare the provided password with the hashed password
+            const passwordMatch = await bcrypt.compare(password, userData.password);
+
+            if (!passwordMatch) {
+                // Incorrect password
+                const response = h.response({
+                    status: "unauthorized",
+                    message: "Invalid email or password",
+                });
+                response.code(401);
+                return response;
+            }
+
+            // Authenticate user in Firebase
+            const userRecord = await firebase_admin.auth().getUser(userData.firebase_uid);
+
+            // Generate Firebase ID token
+            const token = await firebase_admin.auth().createCustomToken(userRecord.uid);
 
             const response = h.response({
                 status: "success",
-                firebase_uid: uid,
+                token: token,
             });
             response.code(200);
             return response;
@@ -32,15 +59,7 @@ const loginUsers = async (request, h) => {
             const response = h.response({
                 status: "bad request",
             });
-
-            // Check if the error is due to invalid credentials
-            if (error.code === "auth/id-token-expired" || error.code === "auth/invalid-id-token") {
-                response.message = "Invalid ID token";
-                response.code(401); // Unauthorized
-            } else {
-                response.code(500); // Internal Server Error
-            }
-
+            response.code(400);
             return response;
         }
     } else {

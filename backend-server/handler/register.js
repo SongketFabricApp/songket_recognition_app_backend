@@ -1,10 +1,8 @@
 // Dependencies
 const firebase_admin = require("firebase-admin");
-const { Storage } = require("@google-cloud/storage");
 const fs = require("fs");
 const path = require("path");
 const api_key = require("../private/key.json").api_key;
-const bucketName = require("../private/key.json").storage_bucket;
 const bcrypt = require('bcrypt');
 
 //POST - Register User
@@ -27,9 +25,6 @@ const makeUsers = async (request, h) => {
                 password: password,
             });
 
-            // Obtain the ID token from the created user
-            const idToken = await firebase_admin.auth().createCustomToken(userRecord.uid);
-
             const db = firebase_admin.firestore();
             const outputDb = db.collection("users");
             const newDocumentRef = outputDb.doc();
@@ -46,7 +41,6 @@ const makeUsers = async (request, h) => {
 
             const response = h.response({
                 status: "success",
-                token: idToken,
             });
             response.code(200);
             return response;
