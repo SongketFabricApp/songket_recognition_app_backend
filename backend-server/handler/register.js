@@ -41,6 +41,7 @@ const makeUsers = async (request, h) => {
 
             const response = h.response({
                 status: "success",
+                message: "Account Created Successfully",
             });
             response.code(200);
             return response;

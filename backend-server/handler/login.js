@@ -48,9 +48,15 @@ const loginUsers = async (request, h) => {
             // Generate Firebase ID token
             const token = await firebase_admin.auth().createCustomToken(userRecord.uid);
 
-            const response = h.response({
-                status: "success",
+            const loginResult = {
+                userId: userData.user_id,
+                name: userData.username,
                 token: token,
+            };
+
+            const response = h.response({
+                status: "Login Success",
+                loginResult: loginResult,
             });
             response.code(200);
             return response;
