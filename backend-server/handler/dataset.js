@@ -14,8 +14,7 @@ const makeDataset = async (request, h) => {
     if (key === api_key) {
         // Try (jika request payload valid)
         try {
-            const {fabricname, origin, pattern, description, img_url } =
-                request.payload;
+            const { fabricname, origin, pattern, description, img_url } = request.payload;
 
             const fabricId = "fabric" + Date.now().toString();
             const filename = img_url.hapi.filename;
@@ -26,7 +25,7 @@ const makeDataset = async (request, h) => {
             });
 
             // The path to your file to upload
-            const filePath =`./${filename}`;
+            const filePath = `./${filename}`;
             const fileExtension = filename.split(".").pop();
 
             // The new ID for your GCS file
@@ -77,28 +76,26 @@ const makeDataset = async (request, h) => {
                 description: description,
                 img_url: url,
             });
-            
-            const response = h.response({
-                status: "success",
-            });
-            response.code(200);
-            return response;
+
+            return {
+                error: false,
+                message: "Dataset Created",
+            };
         } catch (error) {
             // Catch (jika request payload tidak valid)
-            const response = h.response({
-                status: "bad request",
-            });
-            response.code(400);
-            return response;
+            console.error("Error creating dataset:", error);
+            return {
+                error: true,
+                message: "Bad Request",
+            };
         }
     }
     // Jika Kunci API Salah
     else {
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
+        return {
+            error: true,
+            message: "Unauthorized",
+        };
     }
 };
 
@@ -161,7 +158,7 @@ const getDataset = async (request, h) => {
     }
 };
 
-//PUT - Edit Data Dataset Tertentu
+// PUT - Edit Data Dataset Tertentu
 const editDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -173,60 +170,60 @@ const editDataset = async (request, h) => {
             const { idfabric, fabricname, origin, pattern, description, img_url } =
                 request.payload;
 
-                const fabricId = "fabric" + Date.now().toString();
-                const filename = img_url.hapi.filename;
-                const data = img_url._data;
-    
-                const storage = new Storage({
-                    keyFilename: path.join(__dirname, "../private/songketa.json"),
-                });
-    
-                // The path to your file to upload
-                const filePath =`./${filename}`;
-                const fileExtension = filename.split(".").pop();
-    
-                // The new ID for your GCS file
-                const destFileName = `fabric/${fabricId}.${fileExtension}`;
-    
-                // file URL
-                const url = `https://storage.googleapis.com/${bucketName}/${destFileName}`;
-    
-                async function uploadFile() {
-                    const options = {
-                        destination: destFileName,
-                    };
-    
-                    // Creates the new bucket
-                    await storage.bucket(bucketName).upload(filePath, options);
-    
-                    // Making file public to the internet
-                    async function makePublic() {
-                        await storage
-                            .bucket(bucketName)
-                            .file(destFileName)
-                            .makePublic();
-                    }
-                    makePublic().catch(console.error);
+            const fabricId = "fabric" + Date.now().toString();
+            const filename = img_url.hapi.filename;
+            const data = img_url._data;
+
+            const storage = new Storage({
+                keyFilename: path.join(__dirname, "../private/songketa.json"),
+            });
+
+            // The path to your file to upload
+            const filePath = `./${filename}`;
+            const fileExtension = filename.split(".").pop();
+
+            // The new ID for your GCS file
+            const destFileName = `fabric/${fabricId}.${fileExtension}`;
+
+            // file URL
+            const url = `https://storage.googleapis.com/${bucketName}/${destFileName}`;
+
+            async function uploadFile() {
+                const options = {
+                    destination: destFileName,
+                };
+
+                // Creates the new bucket
+                await storage.bucket(bucketName).upload(filePath, options);
+
+                // Making file public to the internet
+                async function makePublic() {
+                    await storage
+                        .bucket(bucketName)
+                        .file(destFileName)
+                        .makePublic();
                 }
-    
-                fs.writeFile(filename, data, async (err) => {
-                    if (!err) {
-                        await uploadFile().catch(console.error);
-                        fs.unlink(filename, (err) => {
-                            if (err) {
-                                console.error("Error deleting file:", err);
-                            } else {
-                            }
-                        });
-                    }
-                });
+                makePublic().catch(console.error);
+            }
+
+            fs.writeFile(filename, data, async (err) => {
+                if (!err) {
+                    await uploadFile().catch(console.error);
+                    fs.unlink(filename, (err) => {
+                        if (err) {
+                            console.error("Error deleting file:", err);
+                        } else {
+                        }
+                    });
+                }
+            });
 
             const db = firebase_admin.firestore();
             const outputDb = db.collection("dataset");
-            const newDocumentRef = outputDb.doc();
-            const documentId = newDocumentRef.id;
-            await newDocumentRef.set({
-                idfabric: documentId,
+
+            // Use the existing document ID for editing
+            await outputDb.doc(id).update({
+                idfabric: id,
                 fabricname: fabricname,
                 origin: origin,
                 pattern: pattern,
@@ -234,31 +231,31 @@ const editDataset = async (request, h) => {
                 img_url: url,
             });
 
-            const response = h.response({
-                status: "success",
-            });
-            response.code(200);
-            return response;
+            return {
+                error: false,
+                message: "Dataset Edited",
+            };
         } catch (error) {
             // Catch (jika request payload tidak valid)
-            const response = h.response({
-                status: "bad request",
-            });
-            response.code(400);
-            return response;
+            console.error("Error editing dataset:", error);
+            return {
+                error: true,
+                message: "Bad Request",
+            };
         }
     }
     // Jika Kunci API Salah
     else {
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
+        return {
+            error: true,
+            message: "Unauthorized",
+        };
     }
 };
 
-//DELETE - Hapus Data Dataset Tertentu
+module.exports = { editDataset };
+
+// DELETE - Hapus Data Dataset Tertentu
 const deleteDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -266,24 +263,51 @@ const deleteDataset = async (request, h) => {
     if (key === api_key) {
         const { id } = request.params;
 
-        const db = firebase_admin.firestore();
-        const outputDb = db.collection("dataset");
-        await outputDb.doc(id).delete();
+        try {
+            const db = firebase_admin.firestore();
+            const outputDb = db.collection("dataset");
 
-        const response = h.response({
-            status: "success",
-        });
-        response.code(200);
-        return response;
+            // Check if the dataset exists
+            const documentId = await outputDb.doc(id).get();
+            if (!documentId.exists) {
+                const response = h.response({
+                    error: true,
+                    message: "Dataset not found",
+                });
+                response.code(404); // Not Found
+                return response;
+            }
+
+            // Delete the dataset
+            await outputDb.doc(id).delete();
+
+            return {
+                error: false,
+                message: "Dataset Deleted",
+            };
+        } catch (error) {
+            console.error("Error deleting dataset:", error);
+
+            const response = h.response({
+                error: true,
+                message: "Internal Server Error",
+            });
+            response.code(500); // Internal Server Error
+            return response;
+        }
     }
     // Jika Kunci API Salah
     else {
         const response = h.response({
-            status: "unauthorized",
+            error: true,
+            message: "Unauthorized",
         });
         response.code(401);
         return response;
     }
 };
+
+module.exports = { deleteDataset };
+
 
 module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset };
