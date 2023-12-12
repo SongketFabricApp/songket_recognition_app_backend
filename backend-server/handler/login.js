@@ -1,6 +1,19 @@
-// Dependencies
 const firebase_admin = require("firebase-admin");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Function to generate a JWT token without expiration
+const generateToken = (userData) => {
+    const payload = {
+        userId: userData.user_id,
+        email: userData.email,
+        // Add any other user-related information you want in the token
+    };
+
+    const token = jwt.sign(payload, 'your_secret_key');
+
+    return token;
+};
 
 // POST - Login User
 const loginUsers = async (request, h) => {
@@ -33,11 +46,12 @@ const loginUsers = async (request, h) => {
             };
         }
 
-        // Authenticate user in Firebase
-        const userRecord = await firebase_admin.auth().getUser(userData.firebase_uid);
-
-        // Generate Firebase ID token
-        const token = await firebase_admin.auth().createCustomToken(userRecord.uid);
+        // Generate token
+        const token = generateToken({
+            user_id: userData.user_id,
+            email: userData.email,
+            // Add any other user-related information you want in the token
+        });
 
         const loginResult = {
             userId: userData.user_id,

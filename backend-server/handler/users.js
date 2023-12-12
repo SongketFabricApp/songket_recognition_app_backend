@@ -120,7 +120,4 @@ const deleteUsers = async (request, h) => {
     }
 };
 
-module.exports = { deleteUsers };
-
-
 module.exports = { getAllUsers, getUsers, deleteUsers};

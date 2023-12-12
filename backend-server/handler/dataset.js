@@ -1,4 +1,4 @@
-// Dependencies
+//Dependencies
 const firebase_admin = require("firebase-admin");
 const { Storage } = require("@google-cloud/storage");
 const fs = require("fs");
@@ -253,8 +253,6 @@ const editDataset = async (request, h) => {
     }
 };
 
-module.exports = { editDataset };
-
 // DELETE - Hapus Data Dataset Tertentu
 const deleteDataset = async (request, h) => {
     // Mengambil Kunci API dari Request Header
@@ -306,8 +304,5 @@ const deleteDataset = async (request, h) => {
         return response;
     }
 };
-
-module.exports = { deleteDataset };
-
 
 module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset };
