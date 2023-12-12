@@ -1,4 +1,4 @@
-## Endpoints
+## Endpoints USER
 All requests to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
 
 
@@ -115,7 +115,6 @@ Retrieve information about all users.
 }
 ```
 
-
 ### 4. Get User by ID
 
 #### `GET /users/{id}`
@@ -173,5 +172,175 @@ Delete a specific user identified by their ID.
 {
     "error": false,
     "message": "User Deleted"
+}
+```
+
+
+## Endpoints DATASET
+All requests to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
+
+
+### 1. Create Dataset
+Create a New Account for Users.
+
+#### `POST /dataset`
+
+##### Request
+
+- Method: POST
+- Headers:
+  - `x-api-key`: Your API Key
+
+##### Response
+
+- Status Code: 200 OK
+- Body:
+  - `img_url` as String: image url from Cloud Storage of the Dataset
+  - `fabricname` as String: Fabric Name of the Dataset
+  - `origin` as String: Origin or Region of the Dataset
+  - `pattern` as String: Pattern of the Dataset
+  - `description` as String: General description of the Dataset
+
+##### Example Response
+
+```json
+{
+    "error": false,
+    "message": "Dataset Created"
+}
+```
+
+### 2. Get All Datasets
+
+#### `GET /dataset`
+
+Retrieve information about all users.
+
+##### Request
+
+- Method: GET
+- Headers:
+  - `x-api-key`: Your API Key
+
+##### Response
+
+- Status Code: 200 OK
+- Body:
+  - `dataset`: An array of dataset objects.
+
+##### Example Response
+
+```json
+{
+    "dataset": [
+        {
+            "pattern": "Pucuk Rebung",
+            "description": "Motif Subahnale pertama kali muncul pada pemerintahan Raja Panji Sukarara dan Dinde Terong Kuning. Motif ini berkembang dari motif wayang dan dikenal karena tingkat kerumitan proses pembuatannya. Nama \"Subahnale\" sendiri mencerminkan dimensi spiritual. Songket subahnale ini memiliki makna Yang Maha Esa atau Yang Maha Kuasa. Hal ini dikarenakan selama proses pembuatannya, penenun selalu mengingat tentang keberadaan Tuhan Yang Maha Kuasa. Dalam proses tersebut, masyarakat menggunakannya sebagai salah satu wirid yang diucapkan untuk selalu dekat dengan Yang Maha Kuasa. Setelah proses pembuatan selesai, penenun menyampaikan ungkapan syukur, seperti kata \"subhanallah\" atau dalam dialek Sasak disebut \"subahnale.\"",
+            "idfabric": "GLDDN750lLp1wdAC7sEf",
+            "fabricname": "Songket Sukarara",
+            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702368645708.png",
+            "origin": "Lombok"
+        },
+        {
+            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702022443089.webp",
+            "origin": "Riau",
+            "pattern": "Pucuk Rebung",
+            "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang.",
+            "idfabric": "NCWApvWBMp5OWYh2O9oX",
+            "fabricname": "Songket Melayu Riau"
+        }
+    ]
+}
+```
+
+### 3. Get Dataset by ID
+
+#### `GET /dataset/{id}`
+
+Create a new user.
+
+##### Request
+
+- Method: GET
+- Headers:
+  - `x-api-key`: Your API Key
+- Path Parameters:
+  - `id`: The ID of the dataset
+
+##### Response
+
+- Status Code: 200 OK
+- Body: Dataset object
+ 
+##### Example Response
+
+```json
+{
+    "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702022443089.webp",
+    "origin": "Riau",
+    "pattern": "Pucuk Rebung",
+    "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang.",
+    "idfabric": "NCWApvWBMp5OWYh2O9oX",
+    "fabricname": "Songket Melayu Riau"
+}
+```
+
+### 4. Update Dataset by ID
+
+#### `PUT /dataset/{id}`
+
+Update information for a specific user identified by their ID.
+
+##### Request
+
+- Method: PUT
+- Headers:
+  - `x-api-key`: Your API Key
+- Path Parameters:
+  - `id`: The ID of the dataset
+- Body:
+  - `img_url` as String: image url from Cloud Storage of the Dataset
+  - `fabricname` as String: Fabric Name of the Dataset
+  - `origin` as String: Origin or Region of the Dataset
+  - `pattern` as String: Pattern of the Dataset
+  - `description` as String: General description of the Dataset
+
+##### Response
+
+- Status Code: 200 OK
+- Body:
+
+```json
+ {
+    "error": false,
+    "message": "Dataset Edited"
+}
+```
+
+### 5. Delete Dataset by ID
+
+#### `DELETE /dataset/{id}`
+
+Delete a specific user identified by their ID.
+
+#### Request
+
+- Method: DELETE
+- Headers:
+  - `x-api-key`: Your API Key
+- Path Parameters:
+  - `id`: The ID of the dataset
+
+#### Response
+
+- Status Code: 200 OK
+- Body: User object
+
+##### Example Response
+
+```json
+{
+    "error": false,
+    "message": "Dataset Deleted"
 }
 ```
