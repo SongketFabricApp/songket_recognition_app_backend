@@ -26,8 +26,8 @@ Create a New Account for Users.
 
 ```json
 {
-    "status": "success"
-    "message": "Account Created Successfully"
+    "error": false,
+    "message": "User Created"
 }
 ```
 
@@ -54,11 +54,12 @@ Log into the App with the created Account.
 
 ```json
 {
-    "status": "Login Success",
+    "error": false,
+    "message": "Login Success",
     "loginResult": {
-        "userId": "MSrpx7axLIZnk7SnADxD",
-        "name": "dhiandikaAP",
-        "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTcwMjMxMzIzMiwiZXhwIjoxNzAyMzE2ODMyLCJpc3MiOiJzb25na2V0LWZhYkBzb25na2V0LWZhYi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInN1YiI6InNvbmdrZXQtZmFiQHNvbmdrZXQtZmFiLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidWlkIjoiaUxYdFEyNklUeU9Ga0ZITUhjTEt3UEVIYjlwMSJ9.Q7FgZQUKrL-btFHoMjvp_9QmWoApO8AxkifIOCjMImfK6CF9NwNMjSUvQ2wFsDh1FJLwL_YtVbRrbGHmGa3ZK8mYimYMylm7DrBLbw4ErxxL7_o38h8HQgYVsbYNUqC_t15wb-d7lhj8yAShfTJSLJTqNTO6Nn-g7EPwAMnLrLjz9LXoAuo6CaSKu5GeHorRlxfjTqC-avqUGxB-inv17OtDxfdgzawCfWJsKdmU6J2Cb09yCV4XtIboRbD8FpOj4S0MnOgIk3tsUfAIDLvngtI6i8mv3sYIZCS-px4GzaZDREEA79LjPkB2xOzFd8QZXiq7BU-6udXTWbG2R1atlg"
+        "userId": "aOdjqtq0l2VD02Cxe9bP",
+        "name": "kwhy03",
+        "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTcwMjM2NjE3OCwiZXhwIjoxNzAyMzY5Nzc4LCJpc3MiOiJzb25na2V0LWZhYkBzb25na2V0LWZhYi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInN1YiI6InNvbmdrZXQtZmFiQHNvbmdrZXQtZmFiLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidWlkIjoieGNZUEp2YlYyZWI2WmMydUtlbGpiUTdGaklLMiJ9.rU5dQbJePYRK56p_ksZ_d_Z7UMei1TpMJI2wnHGg1_S_s22niB_glLA3qvu2SMqHND7w6zzWpiMyz8lRupJn4KzZ_yRcNOikGIdx-cwouNaVNYiN7HggUOS1J1xH21gfPDjdypm2K8nOCE3_LccHdu1dIinJ0_cfElwhuSOzK4hQ8fmVsXMYzUXP8hRuZisusoJXKrMVa77PPTqGwK3GE4ZR0uwpSrje9npPxWv2lVVHFgb8mQA-n_0jifTHhfLPmipqHpEegUgekUvK6xaAuR8kbCeZF9cEqwHXEiDuEpF05G6OhXC8kBRA28OTJ5CqzZt87x1W3WN3s4K8RiGaPA"
     }
 }
 ```
@@ -164,5 +165,13 @@ Delete a specific user identified by their ID.
 #### Response
 
 - Status Code: 200 OK
-- Body:
-  - `status`: "success"
+- Body: User object
+
+##### Example Response
+
+```json
+{
+    "error": false,
+    "message": "User Deleted"
+}
+```
