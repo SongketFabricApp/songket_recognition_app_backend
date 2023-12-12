@@ -5,7 +5,7 @@ const path = require("path");
 const api_key = require("../private/key.json").api_key;
 const bcrypt = require('bcrypt');
 
-//POST - Register User
+// POST - Register User
 const makeUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -13,7 +13,7 @@ const makeUsers = async (request, h) => {
     if (key === api_key) {
         // Try (jika request payload valid)
         try {
-            const { username, email, phone, password} =
+            const { username, email, phone, password } =
                 request.payload;
 
             // Hash the password before storing it
@@ -39,25 +39,22 @@ const makeUsers = async (request, h) => {
                 firebase_uid: userRecord.uid,
             });
 
-            const response = h.response({
-                status: "success",
-                message: "Account Created Successfully",
-            });
-            response.code(200);
-            return response;
+            return {
+                error: false,
+                message: "Register Success",
+            };
         } catch (error) {
             // Catch (jika request payload tidak valid atau error saat membuat user)
             console.error("Error creating user:", error);
-            const response = h.response({
-                status: "bad request",
-            });
+
+            const response = {
+                error: true,
+                message: "Internal Server Error",
+            };
 
             // Check if the error is due to an existing email
             if (error.code === "auth/email-already-exists") {
                 response.message = "Email address is already in use";
-                response.code(400); // Bad Request
-            } else {
-                response.code(500); // Internal Server Error
             }
 
             return response;
@@ -65,12 +62,11 @@ const makeUsers = async (request, h) => {
     }
     // Jika Kunci API Salah
     else {
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
+        return {
+            error: true,
+            message: "Unauthorized",
+        };
     }
 };
 
-module.exports = {makeUsers};
+module.exports = { makeUsers };

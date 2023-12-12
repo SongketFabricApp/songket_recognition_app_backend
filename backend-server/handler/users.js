@@ -65,7 +65,7 @@ const getUsers = async (request, h) => {
     }
 };
 
-//DELETE - Hapus Data User Tertentu
+// DELETE - Hapus Data User Tertentu
 const deleteUsers = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -74,49 +74,53 @@ const deleteUsers = async (request, h) => {
         const { id } = request.params;
 
         try {
-        const db = firebase_admin.firestore();
-        const outputDb = db.collection("users");
+            const db = firebase_admin.firestore();
+            const outputDb = db.collection("users");
 
-        const documentId = await outputDb.doc(id).get();
+            const documentId = await outputDb.doc(id).get();
 
-        // Check if the user exists
+            // Check if the user exists
             if (!documentId.exists) {
                 const response = h.response({
-                    status: "not found",
+                    error: true,
                     message: "User not found",
                 });
                 response.code(404); // Not Found
                 return response;
             }
-        
-        await outputDb.doc(id).delete();
 
-        const firebaseUid = documentId.data().firebase_uid;
-        await firebase_admin.auth().deleteUser(firebaseUid);
+            await outputDb.doc(id).delete();
 
-        const response = h.response({
-            status: "success",
-        });
-        response.code(200);
-        return response;
-    } catch (error) {
-        console.error("Error deleting user:", error);
+            const firebaseUid = documentId.data().firebase_uid;
+            await firebase_admin.auth().deleteUser(firebaseUid);
 
-        const response = h.response({
-            status: "bad request",
-        });
-        response.code(500); // Internal Server Error
-        return response;
+            return {
+                error: false,
+                message: "User Deleted",
+            };
+        } catch (error) {
+            console.error("Error deleting user:", error);
+
+            const response = h.response({
+                error: true,
+                message: "Internal Server Error",
+            });
+            response.code(500); // Internal Server Error
+            return response;
+        }
     }
-}
     // Jika Kunci API Salah
     else {
         const response = h.response({
-            status: "unauthorized",
+            error: true,
+            message: "Unauthorized",
         });
         response.code(401);
         return response;
     }
 };
+
+module.exports = { deleteUsers };
+
 
 module.exports = { getAllUsers, getUsers, deleteUsers};

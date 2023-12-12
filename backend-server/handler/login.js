@@ -20,11 +20,10 @@ const loginUsers = async (request, h) => {
 
             if (userQuery.empty) {
                 // User not found
-                const response = h.response({
-                    status: "not found",
-                });
-                response.code(404);
-                return response;
+                return {
+                    error: true,
+                    message: "User not found",
+                };
             }
 
             const userData = userQuery.docs[0].data();
@@ -34,12 +33,10 @@ const loginUsers = async (request, h) => {
 
             if (!passwordMatch) {
                 // Incorrect password
-                const response = h.response({
-                    status: "unauthorized",
+                return {
+                    error: true,
                     message: "Invalid email or password",
-                });
-                response.code(401);
-                return response;
+                };
             }
 
             // Authenticate user in Firebase
@@ -54,27 +51,24 @@ const loginUsers = async (request, h) => {
                 token: token,
             };
 
-            const response = h.response({
-                status: "Login Success",
+            return {
+                error: false,
+                message: "Login Success",
                 loginResult: loginResult,
-            });
-            response.code(200);
-            return response;
+            };
         } catch (error) {
             console.error("Error logging in:", error);
-            const response = h.response({
-                status: "bad request",
-            });
-            response.code(400);
-            return response;
+            return {
+                error: true,
+                message: "bad request",
+            };
         }
     } else {
         // Jika Kunci API Salah
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
+        return {
+            error: true,
+            message: "unauthorized",
+        };
     }
 };
 
