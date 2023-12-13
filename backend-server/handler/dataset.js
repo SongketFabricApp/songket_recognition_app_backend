@@ -6,15 +6,52 @@ const path = require("path");
 const api_key = require("../private/key.json").api_key;
 const bucketName = require("../private/key.json").storage_bucket;
 
+// Middleware untuk autentikasi bearer token
+const authenticateBearerToken = (request, h) => {
+    // Mengambil Bearer Token dari Request Header
+    const bearerToken = request.headers.authorization;
+
+    if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
+        // Token tidak disediakan atau dalam format yang salah
+        const response = h.response({
+            error: true,
+            message: "Unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
+
+    const token = bearerToken.replace('Bearer ', '');
+    const decodedToken = verifyToken(token);
+
+    if (!decodedToken) {
+        // Token tidak valid
+        const response = h.response({
+            error: true,
+            message: "Unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
+
+    // Menambahkan informasi token ke request untuk digunakan di handler rute
+    request.auth = {
+        decodedToken: decodedToken,
+    };
+
+    return h.continue;
+};
+
 // POST - Buat Data Dataset Baru
 const makeDataset = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        // Try (jika request payload valid)
-        try {
-            const { fabricname, origin, pattern, description, img_url } = request.payload;
+    try {
+        // Menjalankan middleware autentikasi bearer token
+        const response = await authenticateBearerToken(request, h);
+        if (response) {
+            return response;
+        }
+
+        const { fabricname, origin, pattern, description, img_url } = request.payload;
 
             const fabricId = "fabric" + Date.now().toString();
             const filename = img_url.hapi.filename;
@@ -82,22 +119,16 @@ const makeDataset = async (request, h) => {
                 message: "Dataset Created",
             };
         } catch (error) {
-            // Catch (jika request payload tidak valid)
             console.error("Error creating dataset:", error);
-            return {
+            const response = h.response({
                 error: true,
-                message: "Bad Request",
-            };
+                message: "Internal Server Error",
+            });
+            response.code(500);
+            return response;
         }
-    }
-    // Jika Kunci API Salah
-    else {
-        return {
-            error: true,
-            message: "Unauthorized",
-        };
-    }
-};
+    };
+    
 
 //GET - Ambil Seluruh Dataset
 const getAllDataset = async (request, h) => {
@@ -130,33 +161,46 @@ const getAllDataset = async (request, h) => {
     }
 };
 
-//GET - Ambil Data Dataset Tertentu
+// GET - Ambil Data Dataset Tertentu
 const getDataset = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        // Mengambil ID Users dari Request Params
-        const { id } = request.params;
+    // Mengambil Bearer Token dari Request Header
+    const bearerToken = request.headers.authorization;
 
-        const db = firebase_admin.firestore();
-        const responseData = (
-            await db.collection("dataset").doc(id).get()
-        ).data();
-
-        const response = h.response(responseData);
-        response.code(200);
-        return response;
-    }
-    // Jika Kunci API Salah
-    else {
+    if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
+        // Token not provided or in the wrong format
         const response = h.response({
             status: "unauthorized",
         });
         response.code(401);
         return response;
     }
+
+    const token = bearerToken.replace('Bearer ', '');
+    const decodedToken = verifyToken(token);
+
+    if (!decodedToken) {
+        // Token is invalid
+        const response = h.response({
+            status: "unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
+
+    const userId = decodedToken.userId;
+
+    // Continue with your logic to fetch dataset
+    const { id } = request.params;
+    const db = firebase_admin.firestore();
+    const responseData = (
+        await db.collection("dataset").doc(id).get()
+    ).data();
+
+    const response = h.response(responseData);
+    response.code(200);
+    return response;
 };
+
 
 // PUT - Edit Data Dataset Tertentu
 const editDataset = async (request, h) => {
@@ -305,4 +349,4 @@ const deleteDataset = async (request, h) => {
     }
 };
 
-module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset };
+module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset, authenticateBearerToken };

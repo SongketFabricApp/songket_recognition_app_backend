@@ -16,7 +16,7 @@ def predict_class(img_path):
     class_index = np.argmax(predictions, axis=1)
 
     # Mapping indeks kelas ke label kelas
-    class_labels = {0: 'bunga_palembang', 1: 'pucukRebung_riau', 2: 'sirangkak_sumateraBarat', 3: 'subahnale_lombok'}
+    class_labels = {0: 'bunga_palembang', 1: 'pucukRebung_riau', 2: 'sirangkak_sumateraBarat', 3: 'subahnale_lombok', 4: 'bukan_songket'}
     predicted_class = class_labels[class_index[0]]
 
     return predicted_class
