@@ -7,6 +7,7 @@ const generateToken = (userData) => {
     const payload = {
         userId: userData.user_id,
         email: userData.email,
+        phone: userData.phone,
         // Add any other user-related information you want in the token
     };
 
@@ -56,6 +57,8 @@ const loginUsers = async (request, h) => {
         const loginResult = {
             userId: userData.user_id,
             name: userData.username,
+            email: userData.email,
+            phone: userData.phone,
             token: token,
         };
 
