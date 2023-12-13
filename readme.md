@@ -57,9 +57,11 @@ Log into the App with the created Account.
     "error": false,
     "message": "Login Success",
     "loginResult": {
-        "userId": "aOdjqtq0l2VD02Cxe9bP",
-        "name": "kwhy03",
-        "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTcwMjM2NjE3OCwiZXhwIjoxNzAyMzY5Nzc4LCJpc3MiOiJzb25na2V0LWZhYkBzb25na2V0LWZhYi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInN1YiI6InNvbmdrZXQtZmFiQHNvbmdrZXQtZmFiLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwidWlkIjoieGNZUEp2YlYyZWI2WmMydUtlbGpiUTdGaklLMiJ9.rU5dQbJePYRK56p_ksZ_d_Z7UMei1TpMJI2wnHGg1_S_s22niB_glLA3qvu2SMqHND7w6zzWpiMyz8lRupJn4KzZ_yRcNOikGIdx-cwouNaVNYiN7HggUOS1J1xH21gfPDjdypm2K8nOCE3_LccHdu1dIinJ0_cfElwhuSOzK4hQ8fmVsXMYzUXP8hRuZisusoJXKrMVa77PPTqGwK3GE4ZR0uwpSrje9npPxWv2lVVHFgb8mQA-n_0jifTHhfLPmipqHpEegUgekUvK6xaAuR8kbCeZF9cEqwHXEiDuEpF05G6OhXC8kBRA28OTJ5CqzZt87x1W3WN3s4K8RiGaPA"
+        "userId": "z9ePZSxgZFwnaGhQyzXD",
+        "name": "diki123",
+        "email": "dikadiki@gmail.com",
+        "phone": "487387483",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ6OWVQWlN4Z1pGd25hR2hReXpYRCIsImVtYWlsIjoiZGlrYWRpa2lAZ21haWwuY29tIiwiaWF0IjoxNzAyNDU3MzE5fQ.i6Xu9A2hbRvBw76QMd8sreGRIvUHW-BRa4HOrYr9taA"
     }
 }
 ```
