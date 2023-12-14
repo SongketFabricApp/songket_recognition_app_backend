@@ -1,18 +1,5 @@
 const firebase_admin = require("firebase-admin");
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-// Function to generate a JWT token without expiration
-const generateToken = (firebaseUid) => {
-    const payload = {
-        firebaseUid: firebaseUid,
-        // Add any other user-related information you want in the token
-    };
-
-    const token = jwt.sign(payload, 'your_secret_key');
-
-    return token;
-};
 
 // POST - Register User
 const makeUsers = async (request, h) => {
@@ -41,8 +28,6 @@ const makeUsers = async (request, h) => {
             password: hashedPassword,
             firebase_uid: userRecord.uid,
         });
-
-        const token = generateToken(userRecord.uid);
 
         return {
             error: false,

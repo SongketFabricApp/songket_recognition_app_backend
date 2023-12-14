@@ -1,6 +1,5 @@
 const firebase_admin = require("firebase-admin");
 const bcrypt = require('bcrypt');
-const generateToken = require('./tokenGenerator');
 
 // POST - Login User
 const loginUsers = async (request, h) => {
@@ -41,22 +40,12 @@ const loginUsers = async (request, h) => {
       };
     }
 
-    // Generate a new token and update the user data
-    const newToken = generateToken(email);
-
-    // Update the user's token in Firestore
-    await firebase_admin.firestore().collection('users')
-      .doc(userData.user_id)
-      .update({
-        firebase_uid: newToken,
-      });
-
     const loginResult = {
       userId: userData.user_id,
       name: userData.username,
       email: userData.email,
       phone: userData.phone,
-      token: newToken, // Updated token
+      token: userData.firebase_uid,
     };
 
     return {
