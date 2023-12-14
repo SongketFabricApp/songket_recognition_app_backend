@@ -10,8 +10,6 @@ Create a New Account for Users.
 ##### Request
 
 - Method: POST
-- Headers:
-  - `x-api-key`: Your API Key
 
 ##### Response
 
@@ -40,8 +38,6 @@ Log into the App with the created Account.
 ##### Request
 
 - Method: POST
-- Headers:
-  - `x-api-key`: Your API Key
 - Path Parameters:
   - `id` as String: The ID of the user
 
@@ -90,28 +86,36 @@ Retrieve information about all users.
 {
     "users": [
         {
-            "password": "$2b$05$33woVT4FDV8ArlTXpjs7buE2wekFvzejGZjHPkuFbzwABdUxdKWyG",
-            "user_id": "MSrpx7axLIZnk7SnADxD",
-            "phone": "081273473478",
-            "firebase_uid": "iLXtQ26ITyOFkFHMHcLKwPEHb9p1",
-            "email": "dikadiki55@gmail.com",
-            "username": "dhiandikaAP"
+            "password": "$2b$05$s2TBmX9ygtPkm9HnDT07MuZn2.v.oihAXQDRmwpvBr6utzrov09.m",
+            "user_id": "2iLamLhJW1CNkNWGLgeQ",
+            "phone": "085132382738",
+            "email": "niawidiartini@gmail.com",
+            "username": "niawddd123",
+            "firebase_uid": "3cdbb4883f1abdb3f122a022378f81ea164d7135c36397d49b1240dadd13e2d4"
         },
         {
-            "password": "$2b$05$eKpHRDaqYLhCZTZpI6Wb/.BoMfeIfp83V5PD35pcMvMW6em1hrHtC",
-            "user_id": "lgVRqL8CTD3bC0ZKcA62",
-            "phone": "089679389728",
-            "firebase_uid": "Zz2hwGLFj7cucX1iRTDtrc9EAPm1",
+            "password": "$2b$05$jgLcz/7bvun6uxe.vQ7zbeh0Y82RTcxveGNkQWe/ari5PTouUnHR6",
+            "user_id": "F5K2heQcQ67DfT40qmMA",
+            "phone": "293892839",
             "email": "madedika1523@gmail.com",
-            "username": "mddk2003"
+            "username": "mahar123",
+            "firebase_uid": "34367ff194cb9283839e5642a53e08a5770d1bd3ceaeb61a9617ee4abb46cc7a"
         },
         {
-            "password": "$2b$05$Ep6r.FnLM.Mut1torIy3l.rQxWugHxgbbNL.HwXHtY7ek41Az.coq",
-            "user_id": "rbWLYgaUXXNoyK8JLleY",
-            "phone": "085156120819",
-            "firebase_uid": "QJiPzRHryHc8ff4qY2yCJKyZoYD2",
-            "email": "komang.ireno@gmail.com",
-            "username": "reno123"
+            "password": "$2b$05$H9gv3EjYQsVbM.RnoBntTOdiATs4QBiRzfqwhZBmBOaM3JDAtooeu",
+            "user_id": "FVzfI3h9zINNPHCPMPBR",
+            "phone": "293892839",
+            "email": "kwhy@gmail.com",
+            "username": "kwhy",
+            "firebase_uid": "9eeba299f0b74b2070b17f87727bb1fe915251728cd278da45c7ef28f7ebf829"
+        },
+        {
+            "password": "$2b$05$uajR/lHHQhu9xuhCuxlVFuDwf9H5YCWcKHYQvq8KGESXm.vCaasnG",
+            "user_id": "XxLlhaji3D0eaiyVGkna",
+            "phone": "081548213834",
+            "firebase_uid": "BTJLPnC0yYP0Wk8h1Lzo2aCXpqj1",
+            "email": "yoshinori@gmail.com",
+            "username": "yoshinori"
         }
     ]
 }
@@ -140,12 +144,16 @@ Create a new user.
 
 ```json
 {
-    "password": "$2b$05$eKpHRDaqYLhCZTZpI6Wb/.BoMfeIfp83V5PD35pcMvMW6em1hrHtC",
-    "user_id": "lgVRqL8CTD3bC0ZKcA62",
-    "phone": "089679389728",
-    "firebase_uid": "Zz2hwGLFj7cucX1iRTDtrc9EAPm1",
-    "email": "madedika1523@gmail.com",
-    "username": "mddk2003"
+    "error": false,
+    "message": "User fetched successfully",
+    "data": {
+        "password": "$2b$05$uajR/lHHQhu9xuhCuxlVFuDwf9H5YCWcKHYQvq8KGESXm.vCaasnG",
+        "user_id": "XxLlhaji3D0eaiyVGkna",
+        "phone": "081548213834",
+        "firebase_uid": "BTJLPnC0yYP0Wk8h1Lzo2aCXpqj1",
+        "email": "yoshinori@gmail.com",
+        "username": "yoshinori"
+    }
 }
 ```
 
