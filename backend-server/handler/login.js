@@ -21,6 +21,14 @@ const loginUsers = async (request, h) => {
 
         const userData = userQuery.docs[0].data();
 
+        // Ensure that required fields exist in userData
+        if (!userData || !userData.password || !userData.firebase_uid) {
+            return {
+                error: true,
+                message: "Invalid user data",
+            };
+        }
+
         // Compare the provided password with the hashed password
         const passwordMatch = await bcrypt.compare(password, userData.password);
 

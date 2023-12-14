@@ -1,45 +1,61 @@
-//Dependencies
+// Dependencies
 const firebase_admin = require("firebase-admin");
 const { Storage } = require("@google-cloud/storage");
 const fs = require("fs");
 const path = require("path");
 const api_key = require("../private/key.json").api_key;
 const bucketName = require("../private/key.json").storage_bucket;
+const serviceAccount = require("../private/songketa.json");
 
-// Middleware untuk autentikasi bearer token
-const authenticateBearerToken = (request, h) => {
-    // Mengambil Bearer Token dari Request Header
-    const bearerToken = request.headers.authorization;
+// Function to verify the bearer token
+const verifyToken = async (token) => {
+  try {
+    // Use the Firebase Admin SDK to verify the token
+    const decodedToken = await firebase_admin.auth().verifyIdToken(token);
+    return decodedToken;
+  } catch (error) {
+    // Handle errors (e.g., token is invalid)
+    console.error("Error verifying token:", error);
+    return null;
+  }
+};
 
-    if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
-        // Token tidak disediakan atau dalam format yang salah
-        const response = h.response({
-            error: true,
-            message: "Unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
+// Middleware for bearer token authentication
+const authenticateBearerToken = async (request, h) => {
+  // Get the bearer token from the request header
+  const bearerToken = request.headers.authorization;
 
-    const token = bearerToken.replace('Bearer ', '');
-    const decodedToken = verifyToken(token);
+  if (!bearerToken || !bearerToken.startsWith('Bearer ', )) {
+    // Token is not provided or in the wrong format
+    const response = h.response({
+      error: true,
+      message: "Unauthorized",
+    });
+    response.code(401);
+    return response;
+  }
 
-    if (!decodedToken) {
-        // Token tidak valid
-        const response = h.response({
-            error: true,
-            message: "Unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
+  const token = bearerToken.replace('Bearer ', '');
 
-    // Menambahkan informasi token ke request untuk digunakan di handler rute
-    request.auth = {
-        decodedToken: decodedToken,
-    };
+  // Verify the token
+  const decodedToken = await verifyToken(token);
 
-    return h.continue;
+  if (!decodedToken) {
+    // Token is not valid
+    const response = h.response({
+      error: true,
+      message: "Unauthorized",
+    });
+    response.code(401);
+    return response;
+  }
+
+  // Add token information to the request for route handlers
+  request.auth = {
+    decodedToken: decodedToken,
+  };
+
+  return h.continue;
 };
 
 // POST - Buat Data Dataset Baru
@@ -163,79 +179,103 @@ const getAllDataset = async (request, h) => {
 
 // GET - Ambil Data Dataset Tertentu
 const getDataset = async (request, h) => {
-    // Mengambil Bearer Token dari Request Header
-    const bearerToken = request.headers.authorization;
+    try {
+        // Mengambil Firebase UID dari Request
+        const decodedToken = request.auth.decodedToken;
 
-    if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
-        // Token not provided or in the wrong format
+            if (!decodedToken || !decodedToken.firebase_uid) {
+                // Token tidak valid
+                const response = h.response({
+                    status: "unauthorized",
+                });
+                response.code(401);
+                return response;
+            }
+
+        const firebaseUid = decodedToken.firebase_uid;
+
+        const { id } = request.params;
+        const db = firebase_admin.firestore();
+        // Use .limit(1) to retrieve a single document
+        const snapshot = await db.collection("dataset")
+            .where("idfabric", "==", id)
+            .where("firebase_uid", "==", firebaseUid)
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            // Dataset not found or unauthorized
+            const response = h.response({
+                status: "unauthorized",
+            });
+            response.code(401);
+            return response;
+        }
+
+        // Extract the data from the first document in the snapshot
+        const responseData = snapshot.docs[0].data();
+
+        // Respond with the dataset
+        const response = h.response(responseData);
+        response.code(200);
+        return response;
+    } catch (error) {
+        console.error("Error getting dataset:", error);
         const response = h.response({
-            status: "unauthorized",
+            error: true,
+            message: "Internal Server Error",
         });
-        response.code(401);
+        response.code(500);
         return response;
     }
+};
 
-    const token = bearerToken.replace('Bearer ', '');
-    const decodedToken = verifyToken(token);
-
-    if (!decodedToken) {
-        // Token is invalid
-        const response = h.response({
-            status: "unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
-
-    const userId = decodedToken.userId;
+// PUT - Edit Data Dataset Tertentu
+const editDataset = async (request, h) => {
+    // Mengambil Firebase UID dari Request
+    const firebaseUid = request.auth.decodedToken.firebaseUid;
 
     // Continue with your logic to fetch dataset
     const { id } = request.params;
     const db = firebase_admin.firestore();
     const responseData = (
-        await db.collection("dataset").doc(id).get()
-    ).data();
+        await db.collection("dataset").where("idfabric", "==", id).where("firebase_uid", "==", firebaseUid).get()
+    ).docs.map(doc => doc.data());
 
-    const response = h.response(responseData);
-    response.code(200);
-    return response;
-};
+    if (responseData.length === 0) {
+        const response = h.response({
+            status: "unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
 
+    try {
+        const { idfabric, fabricname, origin, pattern, description, img_url } =
+            request.payload;
 
-// PUT - Edit Data Dataset Tertentu
-const editDataset = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        // Try (jika request payload valid)
-        const { id } = request.params;
-        try {
-            const { idfabric, fabricname, origin, pattern, description, img_url } =
-                request.payload;
+        const fabricId = "fabric" + Date.now().toString();
+        const filename = img_url.hapi.filename;
+        const data = img_url._data;
 
-            const fabricId = "fabric" + Date.now().toString();
-            const filename = img_url.hapi.filename;
-            const data = img_url._data;
+        const storage = new Storage({
+            keyFilename: path.join(__dirname, "../private/songketa.json"),
+        });
 
-            const storage = new Storage({
-                keyFilename: path.join(__dirname, "../private/songketa.json"),
-            });
+        // The path to your file to upload
+        const filePath = `./${filename}`;
+        const fileExtension = filename.split(".").pop();
 
-            // The path to your file to upload
-            const filePath = `./${filename}`;
-            const fileExtension = filename.split(".").pop();
+        // The new ID for your GCS file
+        const destFileName = `fabric/${fabricId}.${fileExtension}`;
 
-            // The new ID for your GCS file
-            const destFileName = `fabric/${fabricId}.${fileExtension}`;
+        // file URL
+        const url = `https://storage.googleapis.com/${bucketName}/${destFileName}`;
 
-            // file URL
-            const url = `https://storage.googleapis.com/${bucketName}/${destFileName}`;
-
-            async function uploadFile() {
-                const options = {
-                    destination: destFileName,
-                };
+        async function uploadFile() {
+            const options = {
+                destination: destFileName,
+            };
 
                 // Creates the new bucket
                 await storage.bucket(bucketName).upload(filePath, options);
@@ -273,6 +313,7 @@ const editDataset = async (request, h) => {
                 pattern: pattern,
                 description: description,
                 img_url: url,
+                firebase_uid: firebaseUid,
             });
 
             return {
@@ -287,48 +328,43 @@ const editDataset = async (request, h) => {
                 message: "Bad Request",
             };
         }
-    }
-    // Jika Kunci API Salah
-    else {
-        return {
-            error: true,
-            message: "Unauthorized",
-        };
-    }
-};
+    };
 
 // DELETE - Hapus Data Dataset Tertentu
 const deleteDataset = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        const { id } = request.params;
+    // Mengambil Firebase UID dari Request
+    const firebaseUid = request.auth.decodedToken.firebaseUid;
 
-        try {
-            const db = firebase_admin.firestore();
-            const outputDb = db.collection("dataset");
+    // Continue with your logic to fetch dataset
+    const { id } = request.params;
+    const db = firebase_admin.firestore();
+    const responseData = (
+        await db.collection("dataset").where("idfabric", "==", id).where("firebase_uid", "==", firebaseUid).get()
+    ).docs.map(doc => doc.data());
 
-            // Check if the dataset exists
-            const documentId = await outputDb.doc(id).get();
-            if (!documentId.exists) {
-                const response = h.response({
-                    error: true,
-                    message: "Dataset not found",
-                });
-                response.code(404); // Not Found
-                return response;
-            }
+    if (responseData.length === 0) {
+        const response = h.response({
+            status: "unauthorized",
+        });
+        response.code(401);
+        return response;
+    }
 
-            // Delete the dataset
-            await outputDb.doc(id).delete();
+    try {
+        const outputDb = db.collection("dataset");
 
-            return {
-                error: false,
-                message: "Dataset Deleted",
-            };
-        } catch (error) {
-            console.error("Error deleting dataset:", error);
+        // Use the Firebase UID from the registration process for authorization
+        const firebaseUid = request.auth.decodedToken.firebaseUid;
+
+        // Delete the dataset
+        await outputDb.doc(id).delete();
+
+        return {
+            error: false,
+            message: "Dataset Deleted",
+        };
+    } catch (error) {
+        console.error("Error deleting dataset:", error);
 
             const response = h.response({
                 error: true,
@@ -337,16 +373,6 @@ const deleteDataset = async (request, h) => {
             response.code(500); // Internal Server Error
             return response;
         }
-    }
-    // Jika Kunci API Salah
-    else {
-        const response = h.response({
-            error: true,
-            message: "Unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
-};
+    };
 
 module.exports = { getAllDataset, getDataset, makeDataset, editDataset, deleteDataset, authenticateBearerToken };
