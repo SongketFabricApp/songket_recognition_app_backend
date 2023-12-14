@@ -57,11 +57,11 @@ Log into the App with the created Account.
     "error": false,
     "message": "Login Success",
     "loginResult": {
-        "userId": "z9ePZSxgZFwnaGhQyzXD",
-        "name": "diki123",
-        "email": "dikadiki@gmail.com",
-        "phone": "487387483",
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ6OWVQWlN4Z1pGd25hR2hReXpYRCIsImVtYWlsIjoiZGlrYWRpa2lAZ21haWwuY29tIiwiaWF0IjoxNzAyNDU3MzE5fQ.i6Xu9A2hbRvBw76QMd8sreGRIvUHW-BRa4HOrYr9taA"
+        "userId": "2iLamLhJW1CNkNWGLgeQ",
+        "name": "niawddd123",
+        "email": "niawidiartini@gmail.com",
+        "phone": "085132382738",
+        "token": "f57f84a52a34c8efacf7b41f33337c43b9c4c5fa52fddacc343961d4675a2697"
     }
 }
 ```
@@ -197,7 +197,7 @@ Create a New Account for Users.
 
 - Status Code: 200 OK
 - Body:
-  - `img_url` as String: image url from Cloud Storage of the Dataset
+  - `img` as File: image from Photo saved of the Dataset
   - `fabricname` as String: Fabric Name of the Dataset
   - `origin` as String: Origin or Region of the Dataset
   - `pattern` as String: Pattern of the Dataset
@@ -234,14 +234,16 @@ Retrieve information about all users.
 
 ```json
 {
+    "error": false,
+    "message": "Dataset fetched successfully",
     "dataset": [
         {
-            "pattern": "Pucuk Rebung",
+            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702451913409.png",
+            "origin": "Lombok",
+            "pattern": "Subahnale",
             "description": "Motif Subahnale pertama kali muncul pada pemerintahan Raja Panji Sukarara dan Dinde Terong Kuning. Motif ini berkembang dari motif wayang dan dikenal karena tingkat kerumitan proses pembuatannya. Nama \"Subahnale\" sendiri mencerminkan dimensi spiritual. Songket subahnale ini memiliki makna Yang Maha Esa atau Yang Maha Kuasa. Hal ini dikarenakan selama proses pembuatannya, penenun selalu mengingat tentang keberadaan Tuhan Yang Maha Kuasa. Dalam proses tersebut, masyarakat menggunakannya sebagai salah satu wirid yang diucapkan untuk selalu dekat dengan Yang Maha Kuasa. Setelah proses pembuatan selesai, penenun menyampaikan ungkapan syukur, seperti kata \"subhanallah\" atau dalam dialek Sasak disebut \"subahnale.\"",
-            "idfabric": "GLDDN750lLp1wdAC7sEf",
-            "fabricname": "Songket Sukarara",
-            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702368645708.png",
-            "origin": "Lombok"
+            "idfabric": "K10gWXvaQ3Z60KywoYIa",
+            "fabricname": "Songket Sukarara"
         },
         {
             "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702022443089.webp",
@@ -250,6 +252,22 @@ Retrieve information about all users.
             "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang.",
             "idfabric": "NCWApvWBMp5OWYh2O9oX",
             "fabricname": "Songket Melayu Riau"
+        },
+        {
+            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702543418684.png",
+            "origin": "Bandung",
+            "pattern": "Entahlah",
+            "description": "Ini adalah deskripsi",
+            "idfabric": "aw7ROX64btexlWvvtPrm",
+            "fabricname": "Songket Bangkit"
+        },
+        {
+            "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702409889130.jpg",
+            "origin": "Palembang",
+            "pattern": "Bunga",
+            "description": "Tenun songket Palembang sudah ada sejak zaman kerajaan Sriwijaya dan kesultanan Darusalam yang terjadi karena akulturasi budaya antar bangsa, yang dulunya hanya dipergunakan oleh raja dan keluarga, serta di zaman kesultanan hanya digunakan oleh sultan dan kerabat keraton saja. Salah satu motif songket pada songket Palembang adalah motif bunga. Kain dengan motif bunga mawar memiliki arti sebagai bentuk ramah tama, kelembutan. Hal ini yang membuat kain songket jenis bunga mawar dipakai sebagai peyambut tamu atau tuan rumah.",
+            "idfabric": "iE4tt0byiA912ViUQqu9",
+            "fabricname": "Songket Palembang"
         }
     ]
 }
@@ -278,12 +296,16 @@ Create a new user.
 
 ```json
 {
-    "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702022443089.webp",
-    "origin": "Riau",
-    "pattern": "Pucuk Rebung",
-    "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang.",
-    "idfabric": "NCWApvWBMp5OWYh2O9oX",
-    "fabricname": "Songket Melayu Riau"
+    "error": false,
+    "message": "Dataset fetched successfully",
+    "datasetItem": {
+        "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702451913409.png",
+        "origin": "Lombok",
+        "pattern": "Subahnale",
+        "description": "Motif Subahnale pertama kali muncul pada pemerintahan Raja Panji Sukarara dan Dinde Terong Kuning. Motif ini berkembang dari motif wayang dan dikenal karena tingkat kerumitan proses pembuatannya. Nama \"Subahnale\" sendiri mencerminkan dimensi spiritual. Songket subahnale ini memiliki makna Yang Maha Esa atau Yang Maha Kuasa. Hal ini dikarenakan selama proses pembuatannya, penenun selalu mengingat tentang keberadaan Tuhan Yang Maha Kuasa. Dalam proses tersebut, masyarakat menggunakannya sebagai salah satu wirid yang diucapkan untuk selalu dekat dengan Yang Maha Kuasa. Setelah proses pembuatan selesai, penenun menyampaikan ungkapan syukur, seperti kata \"subhanallah\" atau dalam dialek Sasak disebut \"subahnale.\"",
+        "idfabric": "K10gWXvaQ3Z60KywoYIa",
+        "fabricname": "Songket Sukarara"
+    }
 }
 ```
 
