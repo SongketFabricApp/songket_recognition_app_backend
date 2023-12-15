@@ -23,10 +23,15 @@ const getAllUsers = async (request, h) => {
             responseData["users"].push(dataObject);
         });
 
-        const response = h.response(responseData);
+        const response = h.response({
+            error: false,
+            message: "Users fetched successfully",
+            ...responseData, // include existing data
+        });
+
         response.code(200);
         return response;
-    }
+    } 
     // Jika Kunci API Salah
     else {
         const response = h.response({
@@ -47,9 +52,23 @@ const getUsers = async (request, h) => {
         const { id } = request.params;
 
         const db = firebase_admin.firestore();
-        const responseData = (
-            await db.collection("users").doc(id).get()
-        ).data();
+        const userSnapshot = await db.collection("users").doc(id).get();
+
+        if (!userSnapshot.exists) {
+            const response = h.response({
+                error: false,
+                message: "User not found",
+                users: [],
+            });
+            response.code(404); // Set the response status code to 404 Not Found
+            return response;
+        }
+
+        const responseData = {
+            error: false,
+            message: "User fetched successfully",
+            users: [userSnapshot.data()], // Store the user data in an array
+        };
 
         const response = h.response(responseData);
         response.code(200);
