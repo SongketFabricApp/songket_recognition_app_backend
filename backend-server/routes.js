@@ -3,7 +3,7 @@ const { getUsers, getAllUsers, deleteUsers } = require("./handler/users")
 const { makeUsers } = require("./handler/register")
 const { loginUsers } = require("./handler/login")
 const { makeDataset, editDataset, getDataset, getAllDataset, deleteDataset } = require("./handler/dataset")
-
+const { predict } = require("./handler/requestML")
 
 const routes = [
     // users - Ambil Seluruh Data Users
@@ -38,8 +38,6 @@ const routes = [
         path: "/users/{id}",
         handler: deleteUsers,
     },
-
-    
 
     // dataset - Ambil Seluruh Data Dataset
     {
@@ -79,12 +77,25 @@ const routes = [
             },
         },
     },
-
-    // transaksi - Hapus Data Transaksi Tertentu
+    // dataset - Hapus Data Dataset Tertentu
     {
         method: "DELETE",
         path: "/dataset/{id}",
         handler: deleteDataset,
+    },
+
+    // predict - Buat Data Dataset Baru
+    {
+        method: "POST",
+        path: "/predict",
+        handler: predict,
+        options: {
+            payload: {
+                maxBytes: 10485760,
+                multipart: true,
+                output: 'stream'
+            },
+        },
     },
 
 ];
