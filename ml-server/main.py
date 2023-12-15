@@ -15,15 +15,20 @@ def index():
             # Try (jika request valid)
             try:
                 image_file = request.files['image']
+                if not image_file:
+                    raise ValueError("No image provided in the request.")                
                 image_file.save('uploaded_image.jpg')
 
-                predict_label = predict_class('uploaded_image.jpg')
+                predict_label, dataset_info = predict_class('uploaded_image.jpg')
 
-                result = {'predicted_class': predict_label}
+                result = {'class_pattern': predict_label, 'dataset_info': dataset_info,}
                 return jsonify(result)
             # catch (jika request tidak valid)
-            except:
-                return jsonify({"status": "bad request"})
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                response = jsonify({"status": "bad request", "error_details": str(e)})
+                response.status_code = 400  # Set the response status code to 400 Bad Request
+                return response
         # Jika Kunci API Salah
         else:
             return jsonify({"status": "unauthorized"})
