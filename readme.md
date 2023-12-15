@@ -1,180 +1,188 @@
-## Endpoints USER
-All requests to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
+# API Reference
+## Endpoint Routes
 
+| Route                     | HTTP Method | Description                                 |
+|---------------------------|-------------|---------------------------------------------|
+| /register                 | POST        | Create User Account                         |
+| /login                    | POST        | Login User Account                          |
+| /users                    | GET         | Get All Users                               |
+| /users/{{user_id}}        | GET         | Get Users By ID                             |
+| /users/{{user_id}}        | DELETE      | Delete users                                |
+| /dataset                  | POST        | Create New Fabric Dataset                   |
+| /dataset                  | GET         | Get All Fabric Datasets                     |
+| /dataset/{{idfabric}}     | GET         | Get Fabric Datasets by ID                   |
+| /dataset/{{idfabric}}     | PUT         | Update Fabric Datasets by ID                |
+| /predict/                 | POST        | Make Fabric Predictions from Images         |
+
+## Endpoints USER
+Many request to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
 
 ### 1. Register User
-Create a New Account for Users.
+Create User Account
 
 #### `POST /register`
 
 ##### Request
-
 - Method: POST
-
-##### Response
-
-- Status Code: 200 OK
 - Body:
   - `username` as String: Name of the user
   - `email` as String: Email of the user
   - `phone` as String: Phone number of the user
   - `password` as String: Password for the user
 
-##### Example Response
+##### Response
+- Status Code: 200 OK
 
+##### Example Response
 ```json
 {
     "error": false,
-    "message": "User Created"
+    "message": "Register Success"
 }
 ```
 
 ### 2. Login User
+Login User Account
 
 #### `POST /login`
 
-Log into the App with the created Account.
-
 ##### Request
-
 - Method: POST
-- Path Parameters:
-  - `id` as String: The ID of the user
+- Body:
+  - `email` as String: Email of the user
+  - `password` as String: Password for the user
 
 ##### Response
-
 - Status Code: 200 OK
 - Body: User object
 
 ##### Example Response
-
 ```json
 {
     "error": false,
     "message": "Login Success",
     "loginResult": {
-        "userId": "2iLamLhJW1CNkNWGLgeQ",
-        "name": "niawddd123",
-        "email": "niawidiartini@gmail.com",
-        "phone": "085132382738",
-        "token": "f57f84a52a34c8efacf7b41f33337c43b9c4c5fa52fddacc343961d4675a2697"
+        "userId": "n36fYmDr1j8yZ6Z4QCrg",
+        "name": "niawidiartinii",
+        "email": "niaawd@gmail.com",
+        "phone": "082114873847",
+        "token": "TI4QBTOgy0QMbataLkGpIFd9OHn2"
     }
 }
 ```
 
 ### 3. Get All Users
+Retrieve information about all users.
 
 #### `GET /users`
 
-Retrieve information about all users.
-
 ##### Request
-
 - Method: GET
 - Headers:
   - `x-api-key`: Your API Key
 
 ##### Response
-
 - Status Code: 200 OK
 - Body:
   - `users`: An array of user objects.
 
 ##### Example Response
-
 ```json
 {
+    "error": false,
+    "message": "Users fetched successfully",
     "users": [
         {
-            "password": "$2b$05$s2TBmX9ygtPkm9HnDT07MuZn2.v.oihAXQDRmwpvBr6utzrov09.m",
-            "user_id": "2iLamLhJW1CNkNWGLgeQ",
-            "phone": "085132382738",
-            "email": "niawidiartini@gmail.com",
-            "username": "niawddd123",
-            "firebase_uid": "3cdbb4883f1abdb3f122a022378f81ea164d7135c36397d49b1240dadd13e2d4"
-        },
-        {
-            "password": "$2b$05$jgLcz/7bvun6uxe.vQ7zbeh0Y82RTcxveGNkQWe/ari5PTouUnHR6",
-            "user_id": "F5K2heQcQ67DfT40qmMA",
-            "phone": "293892839",
-            "email": "madedika1523@gmail.com",
-            "username": "mahar123",
-            "firebase_uid": "34367ff194cb9283839e5642a53e08a5770d1bd3ceaeb61a9617ee4abb46cc7a"
-        },
-        {
-            "password": "$2b$05$H9gv3EjYQsVbM.RnoBntTOdiATs4QBiRzfqwhZBmBOaM3JDAtooeu",
-            "user_id": "FVzfI3h9zINNPHCPMPBR",
-            "phone": "293892839",
-            "email": "kwhy@gmail.com",
-            "username": "kwhy",
-            "firebase_uid": "9eeba299f0b74b2070b17f87727bb1fe915251728cd278da45c7ef28f7ebf829"
-        },
-        {
-            "password": "$2b$05$uajR/lHHQhu9xuhCuxlVFuDwf9H5YCWcKHYQvq8KGESXm.vCaasnG",
-            "user_id": "XxLlhaji3D0eaiyVGkna",
-            "phone": "081548213834",
-            "firebase_uid": "BTJLPnC0yYP0Wk8h1Lzo2aCXpqj1",
+            "password": "$2b$05$UkFzDsO5UEcR9qS75a5M7.QRUiwWSm8TC7bC9cQcniqUViBWYv6cm",
+            "user_id": "0cjIA6jIC2xB3qrPGlAH",
+            "phone": "08572854111",
+            "firebase_uid": "xXkVwdHfB1fZCN2PkbGvtyHxgL72",
             "email": "yoshinori@gmail.com",
             "username": "yoshinori"
+        },
+        {
+            "password": "$2b$05$GLTU3yvs.mGrPPGamLC8OulNOk4/OBcJz3MV89NqqnNK3Xk5H23fu",
+            "user_id": "8cJX7tnUCyzcD0qSZ7Gg",
+            "phone": "089679389728",
+            "firebase_uid": "5w8CHClo0CUbIkbhbhZBZguX1d32",
+            "email": "madedika83@gmail.com",
+            "username": "dikadiki"
+        },
+        {
+            "password": "$2b$05$1E1MIpZNBI593fkqMmVprO4WPoPBPyVwxwqdZeVzwaCI3mLmOSClK",
+            "user_id": "jCn8XZkSVzHLwLEfqOWJ",
+            "phone": "08572854111",
+            "firebase_uid": "L0OERXP8HvWrBcvrFjYAbCNSLL62",
+            "email": "doyoung@gmail.com",
+            "username": "doyoung"
+        },
+        {
+            "password": "$2b$05$SKhCue0NbeuW7YHEzE0Y8.PA1E18kwgcvWG2Y2S9bXNMa0M8Tl4Y2",
+            "user_id": "n36fYmDr1j8yZ6Z4QCrg",
+            "phone": "082114873847",
+            "firebase_uid": "TI4QBTOgy0QMbataLkGpIFd9OHn2",
+            "email": "niaawd@gmail.com",
+            "username": "niawidiartinii"
+        },
+        {
+            "password": "$2b$05$0aLHy20NpdTtHKlbSs5qW.teefU/1eWsIT96ygOE94QwwIimDlPoC",
+            "user_id": "vtLKhtn7ajO4HquQuPGk",
+            "phone": "08123456789",
+            "firebase_uid": "K1bTqiTIVUa77MUDTfKNtBh8fh02",
+            "email": "kwhy@gmail.com",
+            "username": "Kwhy"
         }
     ]
 }
 ```
 
 ### 4. Get User by ID
-
-#### `GET /users/{id}`
-
-Create a new user.
+Retrieve information about a specific user identified by their ID.
+#### `GET /users/{user_id}`
 
 ##### Request
-
 - Method: GET
 - Headers:
   - `x-api-key`: Your API Key
 - Path Parameters:
-  - `id`: The ID of the user
+  - `user_id`: The ID of the user
 
 ##### Response
-
 - Status Code: 200 OK
 - Body: User object
  
 ##### Example Response
-
 ```json
 {
     "error": false,
     "message": "User fetched successfully",
-    "data": {
-        "password": "$2b$05$uajR/lHHQhu9xuhCuxlVFuDwf9H5YCWcKHYQvq8KGESXm.vCaasnG",
-        "user_id": "XxLlhaji3D0eaiyVGkna",
-        "phone": "081548213834",
-        "firebase_uid": "BTJLPnC0yYP0Wk8h1Lzo2aCXpqj1",
-        "email": "yoshinori@gmail.com",
-        "username": "yoshinori"
-    }
+    "users": [
+        {
+            "password": "$2b$05$GLTU3yvs.mGrPPGamLC8OulNOk4/OBcJz3MV89NqqnNK3Xk5H23fu",
+            "user_id": "8cJX7tnUCyzcD0qSZ7Gg",
+            "phone": "089679389728",
+            "firebase_uid": "5w8CHClo0CUbIkbhbhZBZguX1d32",
+            "email": "madedika83@gmail.com",
+            "username": "dikadiki"
+        }
+    ]
 }
 ```
 
 ### 5. Delete User by ID
-
-#### `DELETE /users/{id}`
-
 Delete a specific user identified by their ID.
 
-#### Request
+#### `DELETE /users/{user_id}`
 
+#### Request
 - Method: DELETE
 - Headers:
   - `x-api-key`: Your API Key
 - Path Parameters:
-  - `id`: The ID of the user
+  - `user_id`: The ID of the user
 
 #### Response
-
 - Status Code: 200 OK
-- Body: User object
 
 ##### Example Response
 
@@ -187,32 +195,28 @@ Delete a specific user identified by their ID.
 
 
 ## Endpoints DATASET
-All requests to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
-
+All requests to the Dataset API must include the `x-api-key` header with a valid API key. And here are example how to use it
 
 ### 1. Create Dataset
-Create a New Account for Users.
+Create New Fabric Dataset
 
 #### `POST /dataset`
 
 ##### Request
-
 - Method: POST
 - Headers:
   - `x-api-key`: Your API Key
-
-##### Response
-
-- Status Code: 200 OK
 - Body:
-  - `img` as File: image from Photo saved of the Dataset
   - `fabricname` as String: Fabric Name of the Dataset
   - `origin` as String: Origin or Region of the Dataset
   - `pattern` as String: Pattern of the Dataset
   - `description` as String: General description of the Dataset
+  - `img` as File: Upload Image Photo saved to the Dataset
+
+##### Response
+- Status Code: 200 OK
 
 ##### Example Response
-
 ```json
 {
     "error": false,
@@ -221,25 +225,21 @@ Create a New Account for Users.
 ```
 
 ### 2. Get All Datasets
+Retrieve information about all datasets.
 
 #### `GET /dataset`
 
-Retrieve information about all users.
-
 ##### Request
-
 - Method: GET
 - Headers:
   - `x-api-key`: Your API Key
 
 ##### Response
-
 - Status Code: 200 OK
 - Body:
-  - `dataset`: An array of dataset objects.
+  - `fabricid`: An array of fabric objects.
 
 ##### Example Response
-
 ```json
 {
     "error": false,
@@ -282,10 +282,9 @@ Retrieve information about all users.
 ```
 
 ### 3. Get Dataset by ID
+Retrieve information about a specific dataset identified by their ID.
 
-#### `GET /dataset/{id}`
-
-Create a new user.
+#### `GET /dataset/{fabricid}`
 
 ##### Request
 
@@ -296,52 +295,47 @@ Create a new user.
   - `id`: The ID of the dataset
 
 ##### Response
-
 - Status Code: 200 OK
 - Body: Dataset object
  
 ##### Example Response
-
 ```json
 {
     "error": false,
     "message": "Dataset fetched successfully",
     "datasetItem": {
-        "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702451913409.png",
-        "origin": "Lombok",
-        "pattern": "Subahnale",
-        "description": "Motif Subahnale pertama kali muncul pada pemerintahan Raja Panji Sukarara dan Dinde Terong Kuning. Motif ini berkembang dari motif wayang dan dikenal karena tingkat kerumitan proses pembuatannya. Nama \"Subahnale\" sendiri mencerminkan dimensi spiritual. Songket subahnale ini memiliki makna Yang Maha Esa atau Yang Maha Kuasa. Hal ini dikarenakan selama proses pembuatannya, penenun selalu mengingat tentang keberadaan Tuhan Yang Maha Kuasa. Dalam proses tersebut, masyarakat menggunakannya sebagai salah satu wirid yang diucapkan untuk selalu dekat dengan Yang Maha Kuasa. Setelah proses pembuatan selesai, penenun menyampaikan ungkapan syukur, seperti kata \"subhanallah\" atau dalam dialek Sasak disebut \"subahnale.\"",
-        "idfabric": "K10gWXvaQ3Z60KywoYIa",
-        "fabricname": "Songket Sukarara"
+        "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702022443089.webp",
+        "origin": "Riau",
+        "pattern": "Pucuk Rebung",
+        "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang.",
+        "idfabric": "NCWApvWBMp5OWYh2O9oX",
+        "fabricname": "Songket Melayu Riau"
     }
 }
 ```
 
 ### 4. Update Dataset by ID
-
-#### `PUT /dataset/{id}`
-
 Update information for a specific user identified by their ID.
 
-##### Request
+#### `PUT /dataset/{fabricid}`
 
+##### Request
 - Method: PUT
 - Headers:
   - `x-api-key`: Your API Key
 - Path Parameters:
   - `id`: The ID of the dataset
 - Body:
-  - `img_url` as String: image url from Cloud Storage of the Dataset
   - `fabricname` as String: Fabric Name of the Dataset
   - `origin` as String: Origin or Region of the Dataset
   - `pattern` as String: Pattern of the Dataset
   - `description` as String: General description of the Dataset
+  - `img` as File: Upload Image Photo saved to the Dataset
 
 ##### Response
-
 - Status Code: 200 OK
-- Body:
 
+##### Example Response
 ```json
  {
     "error": false,
@@ -350,29 +344,55 @@ Update information for a specific user identified by their ID.
 ```
 
 ### 5. Delete Dataset by ID
+Delete a specific user identified by their ID.
 
 #### `DELETE /dataset/{id}`
 
-Delete a specific user identified by their ID.
-
 #### Request
-
 - Method: DELETE
 - Headers:
   - `x-api-key`: Your API Key
 - Path Parameters:
-  - `id`: The ID of the dataset
+  - `fabricid`: The ID of the dataset
 
 #### Response
-
 - Status Code: 200 OK
-- Body: User object
 
 ##### Example Response
-
 ```json
 {
     "error": false,
     "message": "Dataset Deleted"
+}
+```
+
+## Endpoint Prediction
+
+### 1. Predict Fabric
+Make Fabric Predictions from Images
+
+#### `POST /predict`
+
+##### Request
+- Method: POST
+- Headers:
+  - `x-api-key`: Your API Key
+- Body:
+  - `image` as File: Upload Image Photo saved to the Dataset
+
+##### Response
+- Status Code: 200 OK
+- Body: Dataset prediction & information
+
+##### Example Response
+```json
+{
+    "class_pattern": "pucukRebung_riau",
+    "dataset_info": {
+        "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang",
+        "fabricname": "Songket Melayu Riau",
+        "origin": "Riau",
+        "pattern": "Pucuk Rebung"
+    }
 }
 ```
