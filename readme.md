@@ -387,12 +387,14 @@ Make Fabric Predictions from Images
 ##### Example Response
 ```json
 {
-    "class_pattern": "pucukRebung_riau",
+    "class_pattern": "subahnale_lombok",
     "dataset_info": {
-        "description": "Masyarakat Melayu Riau meyakini dengan kuat akan signifikansi alam, di mana unsur alam dan flora memiliki makna sebagai simbol. Salah satu motif yang umum ditemukan pada Songket Melayu Riau adalah motif pucuk rebung. Pucuk rebung dalam motif ini melambangkan tekad untuk mencapai tujuan, keberuntungan, dan harapan. Selain itu, motif ini juga mencerminkan semangat persatuan dan hati yang terbuka di kalangan masyarakat Riau. Dalam klasifikasi motif Melayu, pucuk rebung diinterpretasikan sebagai simbol pohon bambu yang kokoh dan tidak mudah roboh, bahkan saat dihadapkan dengan angin kencang",
-        "fabricname": "Songket Melayu Riau",
-        "origin": "Riau",
-        "pattern": "Pucuk Rebung"
+        "description": "Motif Subahnale pertama kali muncul pada pemerintahan Raja Panji Sukarara dan Dinde Terong Kuning. Motif ini berkembang dari motif wayang dan dikenal karena tingkat kerumitan proses pembuatannya. Nama \"Subahnale\" sendiri mencerminkan dimensi spiritual. Songket subahnale ini memiliki makna Yang Maha Esa atau Yang Maha Kuasa. Hal ini dikarenakan selama proses pembuatannya, penenun selalu mengingat tentang keberadaan Tuhan Yang Maha Kuasa. Dalam proses tersebut, masyarakat menggunakannya sebagai salah satu wirid yang diucapkan untuk selalu dekat dengan Yang Maha Kuasa. Setelah proses pembuatan selesai, penenun menyampaikan ungkapan syukur, seperti kata \"subhanallah\" atau dalam dialek Sasak disebut \"subahnale.",
+        "fabricname": "Songket Sukarara",
+        "idfabric": "K10gWXvaQ3Z60KywoYIa",
+        "img_url": "https://storage.googleapis.com/songket-fab/fabric/fabric1702451913409.png",
+        "origin": "Lombok",
+        "pattern": "Subahnale"
     }
 }
 ```
