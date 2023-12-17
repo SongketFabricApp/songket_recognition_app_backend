@@ -7,12 +7,13 @@
 | /login                    | POST        | Login User Account                          |
 | /users                    | GET         | Get All Users                               |
 | /users/{{user_id}}        | GET         | Get Users By ID                             |
+| /users/{{user_id}}        | PUT         | Edit Users By ID                             |
 | /users/{{user_id}}        | DELETE      | Delete users                                |
 | /dataset                  | POST        | Create New Fabric Dataset                   |
 | /dataset                  | GET         | Get All Fabric Datasets                     |
 | /dataset/{{idfabric}}     | GET         | Get Fabric Datasets by ID                   |
 | /dataset/{{idfabric}}     | PUT         | Update Fabric Datasets by ID                |
-| /predict/                 | POST        | Make Fabric Predictions from Images         |
+| /predict                  | POST        | Make Fabric Predictions from Images         |
 
 ## Endpoints USER
 Many request to the Users API must include the `x-api-key` header with a valid API key. And here are example how to use it
@@ -169,7 +170,41 @@ Retrieve information about a specific user identified by their ID.
 }
 ```
 
-### 5. Delete User by ID
+### 5. Edit User by ID
+Delete a specific user identified by their ID.
+
+#### `PUT /users/{user_id}`
+
+##### Request
+- Method: POST
+- Body:
+  - `username` as String: Name of the user
+  - `email` as String: Email of the user
+  - `phone` as String: Phone number of the user
+  - `password` as String: Password for the user
+
+##### Response
+- Status Code: 200 OK
+
+##### Example Response
+```json
+{
+    "error": false,
+    "message": "User updated successfully",
+    "users": [
+        {
+            "user_id": "Htn3IvlFLzgm8kw97eL8",
+            "firebase_uid": "OkDBMr6R30W1xZQU80NhSbC8EzR2",
+            "phone": "089523726762",
+            "email": "bukanemailnia@gmail.com",
+            "password": "$2b$05$4NFCJJ6SEmiYFkyw1WKDZeBCvrdn1y7CT8YT38QJPC4MoXaRgvfAy",
+            "username": "nia_wd123"
+        }
+    ]
+}
+```
+
+### 6. Delete User by ID
 Delete a specific user identified by their ID.
 
 #### `DELETE /users/{user_id}`
