@@ -4,35 +4,34 @@ const api_key = require("../private/key.json").ml_key;
 const ml_backend = require("../private/key.json").ml_backend;
 const fs = require("fs");
 
-async function postImageWithAuthorization(filename) {
-    // Path file gambar
-    const imagePath = `${filename}`;
-    // Baca gambar sebagai buffer
-    const imageBuffer = fs.readFileSync(imagePath);
-    // Buat objek FormData dan tambahkan file gambar
+// Fungsi untuk mengirim permintaan ke API ML di dalam API backend
+async function postImageWithAuthorization(imageFilePath, ml_backend) {
     const formData = new FormData();
-    formData.append("image", imageBuffer, { filename: `${filename}` });
-    // Pengaturan header, termasuk authorization dengan x-api-key
-    const headers = {
-        "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
-        "x-api-key": `${api_key}`,
+    formData.append('image', fs.createReadStream(imageFilePath));
+
+    const config = {
+        headers: {
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+            'x-api-key': api_key,
+        },
     };
-    try {
-        // Lakukan permintaan POST menggunakan Axios
-        const response = await axios.post(
-            `${ml_backend}`,
-            formData,
-            { headers }
-        );
-        // Tampilkan hasil respons
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        // Tangani kesalahan jika terjadi
-    }
+
+    const response = await axios.post(`${ml_backend}/predict`, formData, config);
+    return response.data;
 }
 
-// predict - Memprediksi Objek Laundry
+// Fungsi untuk memprediksi kelas menggunakan ML server
+async function predict_class(imageFilePath, mlServerLink) {
+
+    // Contoh implementasi sederhana
+    const modelResult = await postImageWithAuthorization(imageFilePath, mlServerLink);
+    const predicted_class = modelResult.predicted_class;
+    const dataset_info = modelResult.dataset_info;
+
+    return [predicted_class, dataset_info];
+}
+
+// Fungsi predict - Memprediksi Objek kain
 const predict = async (request, h) => {
     // Mengambil Kunci API dari Request Header
     const key = request.headers["x-api-key"];
@@ -42,45 +41,52 @@ const predict = async (request, h) => {
         try {
             const { image } = request.payload;
 
-            // Save to Cloud Storage
-            const filename = image.hapi.filename;
+            // Simpan ke penyimpanan lokal
+            const filename = '../../backend-server';
             const data = image._data;
 
-            let data_response = await new Promise((resolve, reject) => {
-                fs.writeFile(filename, data, async (err) => {
+            await new Promise((resolve, reject) => {
+                fs.writeFile(filename, data, (err) => {
                     if (err) {
                         reject(err);
                     } else {
-                        try {
-                            let postResponse = await postImageWithAuthorization(filename);
-                            fs.unlink(filename, (err) => {
-                                if (err) {
-                                    console.error("Error deleting file:", err);
-                                }
-                            });
-                            resolve(postResponse);
-                        } catch (error) {
-                            reject(error);
-                        }
+                        resolve();
                     }
                 });
             });
 
+            // Ganti dengan link ML server yang sesuai
+            const mlServerLink = ml_backend;
+
+            // Prediksi kelas menggunakan fungsi predict_class
+            const [predicted_class, dataset_info] = await predict_class(filename, mlServerLink);
+
+            // Hapus file lokal
+            fs.unlink(filename, (err) => {
+                if (err) {
+                    console.error("Error deleting file:", err);
+                }
+            });
+
             const response = h.response({
                 status: "success",
-                data: data_response
+                data: {
+                    predicted_class,
+                    dataset_info,
+                },
             });
             response.code(200);
             return response;
         } catch (error) {
+            console.error("Error:", error);
             const response = h.response({
                 status: "bad request",
             });
+            response.code(400);
             return response;
         }
-    }
-    // Jika Kunci API Salah
-    else {
+    } else {
+        // Jika Kunci API Salah
         const response = h.response({
             status: "unauthorized",
         });
