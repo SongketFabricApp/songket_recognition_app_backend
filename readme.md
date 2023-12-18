@@ -179,7 +179,6 @@ Delete a specific user identified by their ID.
 - Method: POST
 - Body:
   - `username` as String: Name of the user
-  - `email` as String: Email of the user
   - `phone` as String: Phone number of the user
   - `password` as String: Password for the user
 
