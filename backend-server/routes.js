@@ -1,5 +1,5 @@
 // Import dari Handler
-const { getUsers, getAllUsers, deleteUsers, editUsers } = require("./handler/users")
+const { getUsers, getAllUsers, editUsers } = require("./handler/users")
 const { makeUsers } = require("./handler/register")
 const { loginUsers } = require("./handler/login")
 const { makeDataset, editDataset, getDataset, getAllDataset, deleteDataset } = require("./handler/dataset")
@@ -37,13 +37,6 @@ const routes = [
         method: "PUT",
         path: "/users/{id}",
         handler: editUsers,
-    },
-
-    // users - Hapus Data Users Tertentu
-    {
-        method: "DELETE",
-        path: "/users/{id}",
-        handler: deleteUsers,
     },
 
 
@@ -92,6 +85,7 @@ const routes = [
         handler: deleteDataset,
     },
 
+    
     // predict - Buat Data Dataset Baru
     {
         method: "POST",

@@ -21,12 +21,12 @@ const makeUsers = async (request, h) => {
         const documentId = newDocumentRef.id;
 
         await newDocumentRef.set({
-            user_id: documentId,
+            userId: documentId,
             username: username,
             email: email,
             phone: phone,
             password: hashedPassword,
-            firebase_uid: userRecord.uid,
+            token: userRecord.uid,
         });
 
         return {

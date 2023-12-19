@@ -28,7 +28,7 @@ const getAllUsers = async (request, h) => {
         const response = h.response({
             error: false,
             message: "Users fetched successfully",
-            ...responseData, // include existing data
+            users: responseData["users"], // Menggunakan array langsung
         });
 
         response.code(200);
@@ -60,7 +60,7 @@ const getUsers = async (request, h) => {
             const response = h.response({
                 error: false,
                 message: "User not found",
-                users: [],
+                users: null,
             });
             response.code(404); // Set the response status code to 404 Not Found
             return response;
@@ -69,7 +69,7 @@ const getUsers = async (request, h) => {
         const responseData = {
             error: false,
             message: "User fetched successfully",
-            users: [userSnapshot.data()], // Store the user data in an array
+            users: userSnapshot.data(), // Store the user data in an array
         };
 
         const response = h.response(responseData);
@@ -128,7 +128,7 @@ const editUsers = async (request, h) => {
             if (payload.email) {
                 updateData.email = payload.email;
                 // Update the email in Firebase Authentication
-                await firebase_admin.auth().updateUser(documentId.data().firebase_uid, { email: payload.email });
+                await firebase_admin.auth().updateUser(documentId.data().token, { email: payload.email });
             }
             if (payload.phone) updateData.phone = payload.phone;
             if (payload.password) {
@@ -137,7 +137,7 @@ const editUsers = async (request, h) => {
                 updateData.password = hashedPassword;
                 
                 // Update the password in Firebase Authentication
-                await firebase_admin.auth().updateUser(documentId.data().firebase_uid, { password: payload.password });
+                await firebase_admin.auth().updateUser(documentId.data().token, { password: payload.password });
             }
 
             await outputDb.doc(id).update(updateData);
@@ -146,7 +146,7 @@ const editUsers = async (request, h) => {
             const responseData = {
                 error: false,
                 message: "User updated successfully",
-                users: [updatedUserSnapshot.data()], // Store the updated user data in an array
+                users: updatedUserSnapshot.data(), // Store the updated user data in an array
             };
 
             const response = h.response(responseData);
@@ -172,60 +172,4 @@ const editUsers = async (request, h) => {
     }
 };
 
-
-// DELETE - Hapus Data User Tertentu
-const deleteUsers = async (request, h) => {
-    // Mengambil Kunci API dari Request Header
-    const key = request.headers["x-api-key"];
-    // Jika Kunci API Benar
-    if (key === api_key) {
-        const { id } = request.params;
-
-        try {
-            const db = firebase_admin.firestore();
-            const outputDb = db.collection("users");
-
-            const documentId = await outputDb.doc(id).get();
-
-            // Check if the user exists
-            if (!documentId.exists) {
-                const response = h.response({
-                    error: true,
-                    message: "User not found",
-                });
-                response.code(404); // Not Found
-                return response;
-            }
-
-            await outputDb.doc(id).delete();
-
-            const firebaseUid = documentId.data().firebase_uid;
-            await firebase_admin.auth().deleteUser(firebaseUid);
-
-            return {
-                error: false,
-                message: "User Deleted",
-            };
-        } catch (error) {
-            console.error("Error deleting user:", error);
-
-            const response = h.response({
-                error: true,
-                message: "Internal Server Error",
-            });
-            response.code(500); // Internal Server Error
-            return response;
-        }
-    }
-    // Jika Kunci API Salah
-    else {
-        const response = h.response({
-            error: true,
-            message: "Unauthorized",
-        });
-        response.code(401);
-        return response;
-    }
-};
-
-module.exports = { getAllUsers, getUsers, deleteUsers, editUsers};
+module.exports = { getAllUsers, getUsers, editUsers};

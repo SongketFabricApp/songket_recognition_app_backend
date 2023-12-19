@@ -36,7 +36,7 @@ def index():
 # Memulai Server
 if __name__ == "__main__":
     with open('./private/key.json', 'r') as fileKey:
-        api_key = json.load(fileKey).get('ml_key')
+        api_key = json.load(fileKey).get('api_key')
     
     print("Server: http://0.0.0.0:8080")
     serve(app, host="0.0.0.0", port=8080)

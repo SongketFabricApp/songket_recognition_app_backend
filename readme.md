@@ -1,3 +1,6 @@
+# Cloud Infrastructure
+<img src="./assets/CC_architecture.png">
+
 # API Reference
 ## Endpoint Routes
 
@@ -7,7 +10,7 @@
 | /login                    | POST        | Login User Account                          |
 | /users                    | GET         | Get All Users                               |
 | /users/{{user_id}}        | GET         | Get Users By ID                             |
-| /users/{{user_id}}        | PUT         | Edit Users By ID                             |
+| /users/{{user_id}}        | PUT         | Edit Users By ID                            |
 | /users/{{user_id}}        | DELETE      | Delete users                                |
 | /dataset                  | POST        | Create New Fabric Dataset                   |
 | /dataset                  | GET         | Get All Fabric Datasets                     |

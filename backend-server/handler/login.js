@@ -22,7 +22,7 @@ const loginUsers = async (request, h) => {
     const userData = userQuery.docs[0].data();
 
     // Ensure that required fields exist in userData
-    if (!userData || !userData.password || !userData.firebase_uid) {
+    if (!userData || !userData.password) {
       return {
         error: true,
         message: 'Invalid user data',
@@ -41,11 +41,11 @@ const loginUsers = async (request, h) => {
     }
 
     const loginResult = {
-      userId: userData.user_id,
-      name: userData.username,
+      userId: userData.userId,
+      username: userData.username,
       email: userData.email,
       phone: userData.phone,
-      token: userData.firebase_uid,
+      token: userData.token,
     };
 
     return {

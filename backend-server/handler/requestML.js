@@ -1,6 +1,6 @@
 const axios = require("axios");
 const FormData = require("form-data");
-const api_key = require("../private/key.json").ml_key;
+const api_key = require("../private/key.json").api_key;
 const ml_backend = require("../private/key.json").ml_backend;
 const fs = require("fs");
 
