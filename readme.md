@@ -11,7 +11,6 @@
 | /users                    | GET         | Get All Users                               |
 | /users/{{user_id}}        | GET         | Get Users By ID                             |
 | /users/{{user_id}}        | PUT         | Edit Users By ID                            |
-| /users/{{user_id}}        | DELETE      | Delete users                                |
 | /dataset                  | POST        | Create New Fabric Dataset                   |
 | /dataset                  | GET         | Get All Fabric Datasets                     |
 | /dataset/{{idfabric}}     | GET         | Get Fabric Datasets by ID                   |
@@ -160,16 +159,14 @@ Retrieve information about a specific user identified by their ID.
 {
     "error": false,
     "message": "User fetched successfully",
-    "users": [
-        {
-            "password": "$2b$05$GLTU3yvs.mGrPPGamLC8OulNOk4/OBcJz3MV89NqqnNK3Xk5H23fu",
-            "user_id": "8cJX7tnUCyzcD0qSZ7Gg",
-            "phone": "089679389728",
-            "firebase_uid": "5w8CHClo0CUbIkbhbhZBZguX1d32",
-            "email": "madedika83@gmail.com",
-            "username": "dikadiki"
-        }
-    ]
+    "users": {
+        "password": "$2b$05$mNKlTWcg9lJXzx5gb1ym/uJeYsLkNZT.2I8CczulBCc7dwVlm/3Fu",
+        "user_id": "tpBkSF3gkdJaHrTL7H7P",
+        "phone": "0895723892398",
+        "email": "madedika83@gmail.com",
+        "username": "dikadiki",
+        "token": "VkFAWLpY7iRMuY4O9M58trnZvRk1"
+    }
 }
 ```
 
@@ -182,7 +179,6 @@ Delete a specific user identified by their ID.
 - Method: POST
 - Body:
   - `username` as String: Name of the user
-  - `email` as String: Email of the user
   - `phone` as String: Phone number of the user
   - `password` as String: Password for the user
 
@@ -194,40 +190,14 @@ Delete a specific user identified by their ID.
 {
     "error": false,
     "message": "User updated successfully",
-    "users": [
-        {
-            "user_id": "Htn3IvlFLzgm8kw97eL8",
-            "firebase_uid": "OkDBMr6R30W1xZQU80NhSbC8EzR2",
-            "phone": "089523726762",
-            "email": "bukanemailnia@gmail.com",
-            "password": "$2b$05$4NFCJJ6SEmiYFkyw1WKDZeBCvrdn1y7CT8YT38QJPC4MoXaRgvfAy",
-            "username": "nia_wd123"
-        }
-    ]
-}
-```
-
-### 6. Delete User by ID
-Delete a specific user identified by their ID.
-
-#### `DELETE /users/{user_id}`
-
-#### Request
-- Method: DELETE
-- Headers:
-  - `x-api-key`: Your API Key
-- Path Parameters:
-  - `user_id`: The ID of the user
-
-#### Response
-- Status Code: 200 OK
-
-##### Example Response
-
-```json
-{
-    "error": false,
-    "message": "User Deleted"
+    "users": {
+        "user_id": "tpBkSF3gkdJaHrTL7H7P",
+        "email": "madedika83@gmail.com",
+        "token": "VkFAWLpY7iRMuY4O9M58trnZvRk1",
+        "phone": "089679389728",
+        "password": "$2b$05$BACPK4K4NXCMF4Q2vuLCEOZY3B7zivDTi9PKnDpXrV0xibLajSITe",
+        "username": "I Made Mahardika Dharmajaya"
+    }
 }
 ```
 
